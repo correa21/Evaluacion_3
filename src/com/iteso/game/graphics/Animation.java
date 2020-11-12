@@ -1,6 +1,6 @@
 package com.iteso.game.graphics;
 
-import com.iteso.game.graphics.Sprite;
+
 
 public class Animation {
 
