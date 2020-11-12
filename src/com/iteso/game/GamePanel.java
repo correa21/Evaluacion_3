@@ -3,7 +3,6 @@ import javax.swing.JPanel;
 
 import com.iteso.game.utils.KeyHandler;
 import com.iteso.game.utils.MouseHandler;
-import com.iteso.game.states.GameStateManager;
 
 
 import java.awt.Color;
@@ -37,8 +36,6 @@ public class GamePanel extends JPanel implements Runnable {
     private MouseHandler mouse;
     private KeyHandler key;
 
-    private GameStateManager gsm;
-
     public GamePanel(BufferStrategy bs, int width, int height) {
         GamePanel.width = width;
         GamePanel.height = height;
@@ -71,7 +68,6 @@ public class GamePanel extends JPanel implements Runnable {
         mouse = new MouseHandler(this);
         key = new KeyHandler(this);
 
-        gsm = new GameStateManager(g);
     }
 
     public void run() {
