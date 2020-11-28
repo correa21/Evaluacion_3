@@ -1,6 +1,7 @@
-package com.iteso.game.utils;
+package iteso.statistics;
 
-import com.iteso.calendar.*;
+import iteso.calendar.Millis;
+import iteso.entity.Player;
 
 public class Statistics {
     private static final int TOPSCORE = 3;
@@ -11,7 +12,7 @@ public class Statistics {
         SCORE
     }
     private static Statistics instance = null;
-    private static int numberOfRegisters = 0;
+    private  int numberOfRegisters = 0;
 
     private Object [][] scoreTable = new Object[TOPSCORE][TABLE_ELEMENTS];
 
@@ -19,7 +20,7 @@ public class Statistics {
        for (int i = 0; i < TOPSCORE; i++){
            for (int j = 0; j < TABLE_ELEMENTS; j++){
                if(Elements.PLAYER.ordinal() == j){
-                   scoreTable[i][j] = new Player("","");
+                   scoreTable[i][j] = new Player();
                }
                if(Elements.DATE.ordinal() == j){
                    scoreTable[i][j] = new Millis(0L);

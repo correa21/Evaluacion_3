@@ -20,9 +20,6 @@ public class Human extends Character {
         //
     }
 
-    public String getCURP() {
-        //
-    }
     
     public void setMoveLeft(boolean state){
         moveLeft = state;
@@ -38,6 +35,22 @@ public class Human extends Character {
 
     public void setMoveDown(boolean state){
         moveDown = state;
+    }
+
+    public boolean getMoveLeft(){
+       return moveLeft;
+    }
+
+    public boolean getMoveRight(){
+        return moveRight;
+    }
+
+    public boolean getMoveUp(){
+        return moveUp;
+    }
+
+    public boolean getMoveDown(){
+        return moveDown;
     }
 
     public void startShooting(){

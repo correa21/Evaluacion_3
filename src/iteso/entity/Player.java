@@ -1,6 +1,5 @@
-package iteso.utils;
+package iteso.entity;
 
-import iteso.entity.Human;
 
 public class Player extends Human {
     private String playerName = "";

@@ -1,8 +1,14 @@
-package com.iteso.game.utils;
-import com.iteso.calendar;
-import com.iteso.entity.*;
-import com.iteso.entity.Character;
-import java.util.*;
+package iteso.game;
+
+import java.util.Random;
+
+import iteso.calendar.Millis;
+import iteso.entity.Character;
+import iteso.entity.Human;
+import iteso.entity.Player;
+import iteso.entity.Robot;
+import iteso.statistics.Statistics;
+
 
 public class Game {
     private static final int NUM_PLAYER = 6;
@@ -11,14 +17,15 @@ public class Game {
     private Player[] playersArray = new Player[NUM_PLAYER];
     private Statistics gameStats = Statistics.getInstance();
     private long score = 0;
+    private Random random = new Random();
 
     public Game(){
         for (int i = 0; i < NUM_PLAYER; i++){
-            playersArray[i] = new Player("","");
+            playersArray[i] = new Player();
         }
     }
     public void newPlayer(int playerNumber, String name, String nickName){
-        playersArray[playerNumber] = new Player(name, nickName);
+        playersArray[playerNumber] = new Player(name, nickName,0,0,0);
     }
     public String getPlayerName(int playerNumber){
         return playersArray[playerNumber].getName();
@@ -56,7 +63,7 @@ public class Game {
         int leftLimit = 48; // numeral '0'
         int rightLimit = 122; // letter 'z'
         int targetStringLength = 10;
-        Random random = new Random();
+        
         String generatedString = random.ints(leftLimit, rightLimit + 1)
             .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
             .limit(targetStringLength)
@@ -68,7 +75,6 @@ public class Game {
         int leftLimit = 97; // letter 'a'
         int rightLimit = 122; // letter 'z'
         int targetStringLength = 10;
-        Random random = new Random();
 
         String generatedString = random.ints(leftLimit, rightLimit + 1)
             .limit(targetStringLength)
