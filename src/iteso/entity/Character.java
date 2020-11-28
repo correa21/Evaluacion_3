@@ -2,9 +2,9 @@ package iteso.entity;
 
 public  class Character {
       private String name;
-      public int hp;
-      public int x;
-      public int y;
+      public int hp = 10;
+      public int x = 0;
+      public int y = 0;
       public int speed;
       public int width = 20;
       public int height = 20;

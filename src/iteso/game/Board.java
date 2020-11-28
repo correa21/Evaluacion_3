@@ -26,8 +26,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-
+import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.JPanel;
+import javax.swing.JOptionPane;
+import javax.swing.ImageIcon;
+
 
 import iteso.entity.*;
 
@@ -46,23 +50,43 @@ public class Board  extends JPanel implements Runnable, MouseListener
 
     boolean ingame = true;
     private Dimension d;
-    int BOARD_WIDTH=500;
-    int BOARD_HEIGHT=500;
-    int newx = 0;
-    BufferedImage img;
-    String message = "Click Board to Start";
+    private final int BOARD_WIDTH=500;
+    private final int BOARD_HEIGHT=500;
+    private final int framesPerSecond = 120;
+
+    // Added Counters
+    Random r = new Random();
+    private int score = 0;
+    private int level = 1;
+    private int numberOfLives = 3;
+    private int highScore;
+    private int markerX, markerY;
+    private static int bossHealth = 30;
+
+    //added backGround
+    private ImageIcon backgroundd = new ImageIcon("images/backgroundSkin.jpg");
+
+
+    private int newx = 0;
+    private BufferedImage img;
     private Thread animator;
-    Player player;
-    Robot[] robots;
+    private Player player;
+    private Robot robots;
+    private ArrayList<Robot> enemyList = new ArrayList<Robot>();
 
  
     public Board()
     {
-          addKeyListener(new TAdapter());
-         addMouseListener(this);
+        addKeyListener(new TAdapter());
+        addMouseListener(this);
         setFocusable(true);
         d = new Dimension(BOARD_WIDTH, BOARD_HEIGHT);
         setBackground(Color.black);
+        if (level == 1) {
+            //aquí pedir nombres y datos para el player
+            JOptionPane.showMessageDialog(null, "Welcome to Space Intruders!\n\nTHINGS TO KNOW:\n\n- Use left/right arrow keys to move\n- Press spacebar to shoot\n- The enemies get faster every level"
+                    + "\n- BOSS every 3 levels\n- A bonus enemy will appear randomly\n- Shoot it for extra points!\n- Press R to reset high score\n- All pixel art is original\n- PLAY WITH SOUND\n\nHAVE FUN!");
+        }
         player = new Player("armando", "Gradak", BOARD_WIDTH-(BOARD_WIDTH-60), BOARD_HEIGHT/2, 2);
         
            /*         
@@ -78,17 +102,21 @@ public class Board  extends JPanel implements Runnable, MouseListener
             animator.start();
             }
                     
-  
+            
         setDoubleBuffered(true);
     }
     
+    @Override
     public void paint(Graphics g){
-        super.paint(g);
+
+        backgroundd.paintIcon(null, g, d.width, d.height);
 
         g.setColor(Color.white);
         g.fillRect(0, 0, d.width, d.height);
         //g.fillOval(x,y,r,r);
         
+        backgroundd.paintIcon(null, g, 0, 0);
+
         // player movement
         g.setColor(Color.red);
         g.fillRect(player.x, player.y, player.width, player.height);
@@ -107,8 +135,8 @@ public class Board  extends JPanel implements Runnable, MouseListener
                 Font small = new Font("Helvetica", Font.BOLD, 14);
                 FontMetrics metr = this.getFontMetrics(small);
                 g.setColor(Color.black);
-            g.setFont(small);
-                g.drawString(message, 10, d.height-60);
+                g.setFont(small);
+                g.drawString(player.scoreToString(), 10, d.height-60);
 
             if (ingame) {
                 
@@ -122,9 +150,6 @@ public class Board  extends JPanel implements Runnable, MouseListener
         g.dispose();
     }
 
-    public void moveMobs(){
-
-    }
     private class TAdapter extends KeyAdapter {
 
         public void keyReleased(KeyEvent e) {
@@ -166,7 +191,7 @@ public class Board  extends JPanel implements Runnable, MouseListener
                     player.startShooting();
                 }
                 if(key==ESCAPEKEY){
-                    player.setMoveLeft(true);
+                    //change a flag and pause the game
                 }
         }
     }
@@ -200,12 +225,10 @@ public class Board  extends JPanel implements Runnable, MouseListener
         int animationDelay = 15;
         long time = System.currentTimeMillis();
             while (true) {//infinite loop
-                // spriteManager.update();
                 repaint();
                 try {
                     time += animationDelay;
-                    Thread.sleep(Math.max(0,time - 
-                    System.currentTimeMillis()));
+                    Thread.sleep(Math.max(0,time - System.currentTimeMillis()));
                 }catch (InterruptedException e) {
                     System.out.println(e);
                 }//end catch
