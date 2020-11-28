@@ -1,3 +1,18 @@
+/**TODO
+ * Create screen limits for mobs
+ * spawn enemies
+ * generate different enemies
+ * score display 
+ * define score per bot
+ * grafics
+ * menu
+ * logIN
+ * pause with ESC
+ * shoot dinamics
+ * shoot beam
+ */
+
+
 package iteso.game;
 
 import java.awt.Color;
@@ -14,7 +29,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-import iteso.entity.Player;
+import iteso.entity.*;
 
 
 
@@ -38,6 +53,7 @@ public class Board  extends JPanel implements Runnable, MouseListener
     String message = "Click Board to Start";
     private Thread animator;
     Player player;
+    Robot[] robots;
 
  
     public Board()
@@ -47,8 +63,8 @@ public class Board  extends JPanel implements Runnable, MouseListener
         setFocusable(true);
         d = new Dimension(BOARD_WIDTH, BOARD_HEIGHT);
         setBackground(Color.black);
-        player = new Player("armando", "Gradak", BOARD_WIDTH/2, BOARD_HEIGHT-60, 5);
-       
+        player = new Player("armando", "Gradak", BOARD_WIDTH-(BOARD_WIDTH-60), BOARD_HEIGHT/2, 2);
+        
            /*         
              try {
                 img = ImageIO.read(this.getClass().getResource("mount.jpg"));
@@ -75,14 +91,19 @@ public class Board  extends JPanel implements Runnable, MouseListener
         
         // player movement
         g.setColor(Color.red);
-        g.fillRect(player.x, player.y, 20, 20);
-        if(player.getMoveRight() == true){
+        g.fillRect(player.x, player.y, player.width, player.height);
+        if(player.getMoveRight() == true && player.x < (BOARD_WIDTH - player.width)){
             player.x += player.speed;
         }
-        if(player.getMoveLeft() == true){
+        if(player.getMoveLeft() == true && player.x > 0){
             player.x -= player.speed;
         }
-
+        if(player.getMoveUp() == true && player.y > 0){
+            player.y -= player.speed;
+        }
+        if(player.getMoveDown() == true && player.y < (BOARD_HEIGHT - (player.height * 3))){
+            player.y += player.speed;
+        }
                 Font small = new Font("Helvetica", Font.BOLD, 14);
                 FontMetrics metr = this.getFontMetrics(small);
                 g.setColor(Color.black);
@@ -99,6 +120,10 @@ public class Board  extends JPanel implements Runnable, MouseListener
             }
         Toolkit.getDefaultToolkit().sync();
         g.dispose();
+    }
+
+    public void moveMobs(){
+
     }
     private class TAdapter extends KeyAdapter {
 
