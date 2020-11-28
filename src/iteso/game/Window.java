@@ -13,7 +13,7 @@ public class Window extends JFrame {
         add(new Board());
         setTitle("Juego Perron");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(500,500);
+        setSize(720,280);
         setLocationRelativeTo(null);
         setResizable(false);
         setVisible(true);

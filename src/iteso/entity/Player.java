@@ -12,7 +12,7 @@ public class Player extends Human implements Drawable {
     private String playerName = "";
     private String nickName = "";
     private int bestScore = 0;
-    ImageIcon mainCharacter = new ImageIcon("images/MC.gif");
+    ImageIcon mainCharacter = new ImageIcon("images/MC2.gif");
 
     public Player() {
         super();

@@ -50,8 +50,8 @@ public class Board  extends JPanel implements Runnable, MouseListener
 
     boolean ingame = true;
     private Dimension d;
-    private final int BOARD_WIDTH=500;
-    private final int BOARD_HEIGHT=500;
+    private final int BOARD_WIDTH=720;
+    private final int BOARD_HEIGHT=280;
     private final int framesPerSecond = 120;
 
     // Added Counters
@@ -64,7 +64,7 @@ public class Board  extends JPanel implements Runnable, MouseListener
     private static int bossHealth = 30;
 
     //added backGround
-    private ImageIcon backgroundd = new ImageIcon("images/backgroundSkin.jpg");
+    private ImageIcon backgroundd = new ImageIcon("images/backgroudSkinn.png");
 
 
     private int newx = 0;
@@ -87,7 +87,7 @@ public class Board  extends JPanel implements Runnable, MouseListener
             JOptionPane.showMessageDialog(null, "Welcome to Space Intruders!\n\nTHINGS TO KNOW:\n\n- Use left/right arrow keys to move\n- Press spacebar to shoot\n- The enemies get faster every level"
                     + "\n- BOSS every 3 levels\n- A bonus enemy will appear randomly\n- Shoot it for extra points!\n- Press R to reset high score\n- All pixel art is original\n- PLAY WITH SOUND\n\nHAVE FUN!");
         }
-        player = new Player("armando", "Gradak", BOARD_WIDTH-(BOARD_WIDTH-60), BOARD_HEIGHT/2, 2);
+        player = new Player("armando", "Gradak", 0, 120, 3);
         
            /*         
              try {
@@ -109,18 +109,19 @@ public class Board  extends JPanel implements Runnable, MouseListener
     @Override
     public void paint(Graphics g){
 
-        backgroundd.paintIcon(null, g, d.width, d.height);
 
         g.setColor(Color.white);
         g.fillRect(0, 0, d.width, d.height);
         //g.fillOval(x,y,r,r);
         
+        //draw characters from this line below
         backgroundd.paintIcon(null, g, 0, 0);
+        player.draw(g);
 
         // player movement
-        g.setColor(Color.red);
-        g.fillRect(player.x, player.y, player.width, player.height);
-        if(player.getMoveRight() == true && player.x < (BOARD_WIDTH - player.width)){
+        //g.setColor(Color.red);
+        //g.fillRect(player.x, player.y, player.width, player.height);
+        if(player.getMoveRight() == true && player.x < (BOARD_WIDTH - (player.width * 5))){
             player.x += player.speed;
         }
         if(player.getMoveLeft() == true && player.x > 0){
@@ -129,7 +130,7 @@ public class Board  extends JPanel implements Runnable, MouseListener
         if(player.getMoveUp() == true && player.y > 0){
             player.y -= player.speed;
         }
-        if(player.getMoveDown() == true && player.y < (BOARD_HEIGHT - (player.height * 3))){
+        if(player.getMoveDown() == true && player.y < (BOARD_HEIGHT - (player.height * 8))){
             player.y += player.speed;
         }
                 Font small = new Font("Helvetica", Font.BOLD, 14);
@@ -147,6 +148,7 @@ public class Board  extends JPanel implements Runnable, MouseListener
             // g.drawImage(img,0,0,200,200 ,null);
             }
         Toolkit.getDefaultToolkit().sync();
+        System.out.println("posicion "+player.x+ " "+ player.y);
         g.dispose();
     }
 
