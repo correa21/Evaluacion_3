@@ -1,4 +1,4 @@
-// package iteso.game;
+package iteso.game;// package iteso.game;
 
 // import java.util.Random;
 

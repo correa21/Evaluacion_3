@@ -148,7 +148,7 @@ public class Board  extends JPanel implements Runnable
 
         g.setColor(Color.white);
         g.fillRect(0, 0, d.width, d.height);
-        
+
         //draw characters from this line below
         backgroundd.paintIcon(null, g, 0, 0);
         if (bullet != null) {
@@ -163,52 +163,51 @@ public class Board  extends JPanel implements Runnable
         }
 
         player.draw(g);
-    
+
         Font small = new Font("Helvetica", Font.BOLD, 20);
         FontMetrics metr = this.getFontMetrics(small);
         g.setColor(Color.pink);
         g.setFont(small);
-        g.drawString("SCORE: " + player.scoreToString(), 10, d.height-260);
+        g.drawString("SCORE: " + player.scoreToString(), 10, d.height - 260);
 
         for (int index = 0; index < lifeList.size(); index++) {
             lifeList.get(index).drawLife(g);
         }
         //create player bullets
-        if(player.isShooting() && canFireNewBullet){
-            bullet = new Bullet(player.getXPosition()+45, player.getYPosition()+55, 0, null, true);
+        if (player.isShooting() && canFireNewBullet) {
+            bullet = new Bullet(player.getXPosition() + 45, player.getYPosition() + 55, 0, null, true);
             bullet.setBulletGraphic("images/bullet.gif");
             canFireNewBullet = false;
             bullets.add(bullet);
         }
         //BFB shooting
-        if(controller.getKeyStatus(KeyHandler.BFB) && canFireNewBullet){
-            if (player.isBFBReady()){
-                bullet = new Bullet(player.getXPosition()+45, player.getYPosition()+55, 0, null, true);
+        if (controller.getKeyStatus(KeyHandler.BFB) && canFireNewBullet) {
+            if (player.isBFBReady()) {
+                bullet = new Bullet(player.getXPosition() + 45, player.getYPosition() + 55, 0, null, true);
                 bullet.setBulletGraphic("images/bfb.gif");
                 canFireNewBullet = false;
                 bullets.add(bullet);
             }
-            
+
         }
         //draw player bullets
-        for(int index = 0; index < bullets.size(); index++){
-                bullets.get(index).draw(g);
+        for (int index = 0; index < bullets.size(); index++) {
+            bullets.get(index).draw(g);
         }
         //draw enemy
-        for(int index = 0; index < enemyList.size(); index++){
-            if ((enemyList.get(index).getXPosition() < 650) && 
-            (enemyList.get(index).getVisible() == false)) {
+        for (int index = 0; index < enemyList.size(); index++) {
+            if ((enemyList.get(index).getXPosition() < 650) &&
+                    (enemyList.get(index).getVisible() == false)) {
                 enemyList.get(index).setVisibile(true);
             }
-            enemyList.get(index).draw(g);          
-    }
+            enemyList.get(index).draw(g);
+        }
         //create enemy bullets
         if (newRobotCanFire) {
             for (int index = 0; index < enemyList.size(); index++) {
-                if(enemyList.get(index).getXVelocity() < 0){
-                    robotBullet = new Bullet(enemyList.get(index).getXPosition()+Dron.WIDTH-25, enemyList.get(index).getYPosition(), 0, null, true);
-                }
-                else{
+                if (enemyList.get(index).getXVelocity() < 0) {
+                    robotBullet = new Bullet(enemyList.get(index).getXPosition() + Dron.WIDTH - 25, enemyList.get(index).getYPosition(), 0, null, true);
+                } else {
                     robotBullet = new Bullet(enemyList.get(index).getXPosition(), enemyList.get(index).getYPosition(), 0, null, true);
                 }
                 robotBullet.setYVelocity(robotBullet.getXVelocity());
@@ -224,6 +223,7 @@ public class Board  extends JPanel implements Runnable
         }
         Toolkit.getDefaultToolkit().sync();
         g.dispose();
+
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -322,6 +322,7 @@ public class Board  extends JPanel implements Runnable
                     System.exit(0);
                 }
             }
+
             if(controller.getKeyStatus(controller.ESCAPE) == true){
                 pause = true;
             }
@@ -329,9 +330,34 @@ public class Board  extends JPanel implements Runnable
         }
         else{
             //agregar opciones de pausa aquí
-            if(controller.getKeyStatus(controller.ESCAPE)){
-                pause = false;
+            String[] buttons = {"Resume","Restart","Exit"};
+            int obtionSelect = JOptionPane.showOptionDialog(null,"PAUSE","",
+                    JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
+            // If they choose to play again, this resets every element in the game
+
+            switch (obtionSelect) {
+                case 0 -> {
+                    System.out.println("Reanudar");
+                    controller.setKeyStatus(controller.ESCAPE,false);
+                    pause = false;
+                    //JOptionPane.getRootFrame().dispose();
+                }
+                case 1 -> {
+                    lifeList.clear();
+                    enemyList.clear();
+                    robotBullets.clear();
+                    level = 1;
+                    numberOfLives = 3;
+                    canFireNewBullet = true;
+                    newRobotCanFire = true;
+                    setupBoard();
+                }
+                case 2 -> System.exit(0);
             }
+
+            //if(controller.getKeyStatus(controller.ESCAPE)){
+            //    pause = false;
+            //}
         }
     }
 
