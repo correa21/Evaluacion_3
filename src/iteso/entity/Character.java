@@ -21,8 +21,10 @@ public abstract class Character extends MovingGameObject {
 
     };
 
-    protected Character(int xPosition, int yPosition, int xVelocity, int yVelocity, Color color, boolean visible){
-        super(xPosition, yPosition, xVelocity, yVelocity, null, true);
+    protected Character(int xPosition, int yPosition, int xVelocity, int yVelocity, Color color, boolean visible, int width, int height){
+        super(xPosition, yPosition, xVelocity, yVelocity, color, visible);
+        this.width = width;
+        this.height = height;
     }
 
 

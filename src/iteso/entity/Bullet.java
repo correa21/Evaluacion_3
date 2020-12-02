@@ -23,7 +23,6 @@ public class Bullet extends MovingGameObject {
         this.diameter = diameter;
         this.setXVelocity(xVelocity);
         this.setYVelocity(0);
-
     }
 
     // Gets the diameter of the bullet
@@ -42,12 +41,22 @@ public class Bullet extends MovingGameObject {
         else if (isVisible){
             bullet.paintIcon(null, g, this.getXPosition(), this.getYPosition());
         }
+        else{
+            g.setColor(null);
+            g.fillRect(this.getXPosition(), this.getYPosition(), 101, 22);
+        }
     }
 
     @Override
     public Rectangle getBounds() {
-        Rectangle bulletHitbox = new Rectangle(xPos, yPos, 7, 15);
-        return bulletHitbox;
+        if (isBFB){
+            Rectangle bulletHitbox = new Rectangle(xPos, yPos, 203, 45);
+            return bulletHitbox;
+        }
+        else{
+            Rectangle bulletHitbox = new Rectangle(xPos, yPos, 101, 22);
+            return bulletHitbox;
+        }
     }
 
 

@@ -13,8 +13,8 @@ public class Robot extends Character {
 
     }
 
-    public Robot(int xPosition, int yPosition, int xVelocity, int yVelocity, Color color, boolean visible) {
-        super(xPosition, yPosition, xVelocity, yVelocity, color, visible);
+    public Robot(int xPosition, int yPosition, int xVelocity, int yVelocity, boolean visible, int width, int heigth) {
+        super(xPosition, yPosition, xVelocity, yVelocity, null, visible, width, heigth);
         moveForward = true;
         isVisible = false;
     }

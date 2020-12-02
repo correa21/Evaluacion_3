@@ -15,7 +15,7 @@ public class Player extends Human {
     private static final int LEFTBOUND = 0;
     private static final int RIGHTBOUND = 720 - (150);
     private static final int SPEED = 3;
-    private static final int JUMPHEIGHT = 1;
+    private static final int JUMPHEIGHT = 4;
     ImageIcon mainCharacter = new ImageIcon("images/MC2.gif");
 
     public Player(){
@@ -85,14 +85,17 @@ public class Player extends Human {
         }
         //Up arrow key press 
         if (control.getKeyStatus(control.JUMP)){
-            this.yPos -= JUMPHEIGHT*SPEED;
+            if(this.yPos > 15){//up limit
+                this.yPos -= JUMPHEIGHT*SPEED;
+            }
+            
         }
         else {
             if (this.yPos >= (220-100)) {
                 stopMoving();
             }
             else
-                this.yPos += JUMPHEIGHT*SPEED;
+                this.yPos += JUMPHEIGHT*(SPEED/2);
         }
         if (control.getKeyStatus(control.SHOOT)){
             startShooting();
