@@ -22,6 +22,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -31,6 +32,7 @@ import javax.swing.JPanel;
 
 import iteso.entity.Bullet;
 import iteso.entity.Dron;
+import iteso.entity.Human;
 import iteso.entity.Player;
 import iteso.utils.KeyHandler;
 
@@ -52,6 +54,7 @@ public class Board  extends JPanel implements Runnable
     private int score = 0;
     private int level = 1;
     private int numberOfLives = 3;
+    private Human singleLife;
     private int highScore;
     private int markerX, markerY;
     private static int bossHealth = 30;
@@ -63,6 +66,7 @@ public class Board  extends JPanel implements Runnable
     private ArrayList<Bullet> bullets = new ArrayList<>();
     private ArrayList<Dron> enemyList = new ArrayList<>();
     private ArrayList<Bullet> robotBullets = new ArrayList<>();
+    private ArrayList<Human> lifeList = new ArrayList<>();
 
 
     //added objects
@@ -106,6 +110,12 @@ public class Board  extends JPanel implements Runnable
         controller.resetController();
 
         player = new Player("ARmando", "Gradak", 0, 120, null, controller);
+
+        // Sets the life counter Ships
+        for (int column = 0; column < numberOfLives; column++) {
+            singleLife = new Human(600 - (column * 30), BOARD_HEIGHT-270, null, null);
+            lifeList.add(singleLife);
+        }
     }
 
     public Board()
@@ -159,6 +169,10 @@ public class Board  extends JPanel implements Runnable
         g.setColor(Color.pink);
         g.setFont(small);
         g.drawString("SCORE: " + player.scoreToString(), 10, d.height-260);
+
+        for (int index = 0; index < lifeList.size(); index++) {
+            lifeList.get(index).drawLife(g);
+        }
         //create player bullets
         if(player.isShooting() && canFireNewBullet){
             bullet = new Bullet(player.getXPosition()+45, player.getYPosition()+55, 0, null, true);
@@ -167,11 +181,14 @@ public class Board  extends JPanel implements Runnable
             bullets.add(bullet);
         }
         //BFB shooting
-        if(player.isBFBReady() && canFireNewBullet){
-            bullet = new Bullet(player.getXPosition()+45, player.getYPosition()+55, 0, null, true);
-            bullet.setBulletGraphic("images/bfb.gif");
-            canFireNewBullet = false;
-            bullets.add(bullet);
+        if(controller.getKeyStatus(KeyHandler.BFB) && canFireNewBullet){
+            if (player.isBFBReady()){
+                bullet = new Bullet(player.getXPosition()+45, player.getYPosition()+55, 0, null, true);
+                bullet.setBulletGraphic("images/bfb.gif");
+                canFireNewBullet = false;
+                bullets.add(bullet);
+            }
+            
         }
         //draw player bullets
         for(int index = 0; index < bullets.size(); index++){
@@ -217,6 +234,7 @@ public class Board  extends JPanel implements Runnable
             //move player bullets
             for(int index = 0; index < bullets.size(); index++){
                 bullets.get(index).move();
+                //check if bullet is far enough
                 if (bullet.getXPosition() > (player.getXPosition()+250)){
                     canFireNewBullet = true;
                 }
@@ -229,7 +247,7 @@ public class Board  extends JPanel implements Runnable
                         // Updates score for normal levels
                         if (level != 3 && level != 6 && level != 9 && level != 12) {
                             player.setBestScore(player.getBestScore()+100);
-                            player.bfbMetter += 100;
+                            player.bfbMetter += 10000;
                             hitMarker = true;
                             markerX = enemyList.get(index).getXPosition(); // Gets positions that the "+ 100" spawns off of
                             markerY = enemyList.get(index).getYPosition();
@@ -240,12 +258,15 @@ public class Board  extends JPanel implements Runnable
                         break;
                     }
                 }
+                //check if there still bullets after collision
                 if(bullets.isEmpty()){
+                    canFireNewBullet = true;
                     break;
                 }
                 //check if bullet out of screen limit
                 if (bullets.get(index).getXPosition() > BOARD_WIDTH){
                     bullets.remove(index);
+                    canFireNewBullet = true;
                 }
             }
             //move enemy
@@ -267,6 +288,38 @@ public class Board  extends JPanel implements Runnable
                 }
                 if (robotBullets.get(index).getYPosition()+robotBullets.get(index).getYVelocity() > BOARD_HEIGHT-130){
                     robotBullets.remove(index);
+                }
+            }
+            // Checks for beam and player collisions
+            for (int index = 0; index < robotBullets.size(); index++) {
+                if (robotBullets.get(index).isColliding(player)) {
+                    robotBullets.remove(index);
+                    lifeList.remove(lifeList.size() - 1); // Removes life if hit by bullet
+                }
+            }
+            //Updates the life counter display 
+            if ((player.isColliding)&& !lifeList.isEmpty()) {
+                int index = lifeList.size() - 1;
+                lifeList.remove(index);
+            } 
+            // Ends game if player runs out of lives
+            else if (lifeList.isEmpty()) {
+                // Gives the player an option to play again or exit
+                int answer = JOptionPane.showConfirmDialog(null, "Would you like to play again?", "You lost the game with " + player.getBestScore() + " points", 0);
+                // If they choose to play again, this resets every element in the game
+                if (answer == 0) {
+                    lifeList.clear();
+                    enemyList.clear();
+                    robotBullets.clear();
+                    level = 1;
+                    numberOfLives = 3;
+                    canFireNewBullet = true;
+                    newRobotCanFire = true;
+                    setupBoard();
+                }
+                // If they choose not to play again, it closes the game
+                if (answer == 1) {
+                    System.exit(0);
                 }
             }
             if(controller.getKeyStatus(controller.ESCAPE) == true){

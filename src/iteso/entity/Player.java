@@ -99,8 +99,5 @@ public class Player extends Human {
         else{
             stopShooting();
         }
-        if (control.getKeyStatus(control.BFB)){
-            shootBFB();
-        }
     }
 }

@@ -8,7 +8,7 @@ public abstract class GameObject implements Drawable {
     protected int xPos;
     protected int yPos;
     protected Color color;
-    protected boolean isColliding;
+    public boolean isColliding;
     
     protected GameObject(){
 
