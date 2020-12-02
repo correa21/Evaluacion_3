@@ -39,7 +39,7 @@ import iteso.utils.KeyHandler;
 
 
 
-public class Board  extends JPanel implements Runnable, MouseListener
+public class Board  extends JPanel implements Runnable
 {
 
     boolean ingame = true;
@@ -79,11 +79,10 @@ public class Board  extends JPanel implements Runnable, MouseListener
  
     public Board()
     {
-        this.addKeyListener(controller);
-        this.setFocusable(true);
+        addKeyListener(controller);
+        setFocusable(true);
         d = new Dimension(BOARD_WIDTH, BOARD_HEIGHT);
-        this.setBackground(Color.black);
-        setDoubleBuffered(true);
+        setBackground(Color.black);
         if (level == 1) {
             //aquí pedir nombres y datos para el player
             JOptionPane.showMessageDialog(null, "Welcome to Space Intruders!\n\nTHINGS TO KNOW:\n\n- Use left/right arrow keys to move\n- Press spacebar to shoot\n- The enemies get faster every level"
@@ -103,9 +102,12 @@ public class Board  extends JPanel implements Runnable, MouseListener
             animator = new Thread(this);
             animator.start();
             }
+                    
+            
+        setDoubleBuffered(true);
     }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// PAINT
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// UPDATE GAME STATE
     @Override
     public void paint(Graphics g){
 
@@ -155,32 +157,6 @@ public class Board  extends JPanel implements Runnable, MouseListener
             }
         }
     }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// SETUP GAME
-    public final void setupGame(){
-        if (level == 1) {
-            //aquí pedir nombres y datos para el player
-            JOptionPane.showMessageDialog(null, "Welcome to Space Intruders!\n\nTHINGS TO KNOW:\n\n- Use left/right arrow keys to move\n- Press spacebar to shoot\n- The enemies get faster every level"
-                    + "\n- BOSS every 3 levels\n- A bonus enemy will appear randomly\n- Shoot it for extra points!\n- Press R to reset high score\n- All pixel art is original\n- PLAY WITH SOUND\n\nHAVE FUN!");
-        }
-        player = new Player("ARmando", "Gradak", 0, 120, null, controller);
-        
-            /*         
-            try {
-                img = ImageIO.read(this.getClass().getResource("mount.jpg"));
-            } catch (IOException e) {
-                System.out.println("Image could not be read");
-            // System.exit(1);
-            }
-            */
-            if (animator == null || !ingame) {
-            animator = new Thread(this);
-            animator.start();
-            }
-                    
-    }
-
-
 
     public void run() {
 
