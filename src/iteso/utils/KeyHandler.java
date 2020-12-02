@@ -11,6 +11,7 @@ public class KeyHandler implements KeyListener{
     public static final int RIGHT = KeyEvent.VK_D;
     public static final int SHOOT = KeyEvent.VK_SPACE;
     public static final int ESCAPE = KeyEvent.VK_ESCAPE;
+    //public static final int PAUSE = KeyEvent.VK_Q;
     public static final int BFB = KeyEvent.VK_Q;
 
 

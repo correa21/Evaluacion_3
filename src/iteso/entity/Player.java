@@ -12,6 +12,7 @@ public class Player extends Human {
     private String playerName = "";
     private String nickName = "";
     private int bestScore = 0;
+    private boolean flagPause = true;
     private static final int LEFTBOUND = 0;
     private static final int RIGHTBOUND = 720 - (150);
     private static final int SPEED = 3;
@@ -70,41 +71,46 @@ public class Player extends Human {
     @Override
     public void move() {
         // Left arrow key press
-        if (control.getKeyStatus(control.LEFT) && (xPos > LEFTBOUND)) {
-            xPos -= SPEED;
-        }
-        else{
-            stopMoving();
-        }
-        // Right arrow key press
-        if (control.getKeyStatus(control.RIGHT) && (xPos < RIGHTBOUND)) {
-            xPos += SPEED;
-        }
-        else{
-            stopMoving();
-        }
-        //Up arrow key press 
-        if (control.getKeyStatus(control.JUMP)){
-            if(this.yPos > 15){//up limit
-                this.yPos -= JUMPHEIGHT*SPEED;
-            }
-            
-        }
-        else {
-            if (this.yPos >= (220-100)) {
+        if(flagPause) {
+            if (control.getKeyStatus(control.LEFT) && (xPos > LEFTBOUND)) {
+                xPos -= SPEED;
+            } else {
                 stopMoving();
             }
-            else
-                this.yPos += JUMPHEIGHT*(SPEED/2);
+            // Right arrow key press
+            if (control.getKeyStatus(control.RIGHT) && (xPos < RIGHTBOUND)) {
+                xPos += SPEED;
+            } else {
+                stopMoving();
+            }
+            //Up arrow key press
+            if (control.getKeyStatus(control.JUMP)) {
+                if (this.yPos > 15) {//up limit
+                    this.yPos -= JUMPHEIGHT;
+                }
+
+            } else {
+                if (this.yPos >= (220 - 100)) {
+                    stopMoving();
+                } else {
+                    this.yPos += JUMPHEIGHT * (SPEED / 2);
+                }
+            }
+            if (control.getKeyStatus(control.SHOOT)) {
+                startShooting();
+            } else {
+                stopShooting();
+            }
+            if (control.getKeyStatus(control.BFB) && (bfbMetter >= BFBREADY)) {
+                shootBFB();
+            }
         }
-        if (control.getKeyStatus(control.SHOOT)){
-            startShooting();
-        }
-        else{
-            stopShooting();
-        }
-        if (control.getKeyStatus(control.BFB) && (bfbMetter >= BFBREADY)){
-            shootBFB();
+    }
+
+    public void pause(){
+        if(control.getKeyStatus(control.ESCAPE)){
+            flagPause = !flagPause;
+            setPause(flagPause);
         }
     }
 }
