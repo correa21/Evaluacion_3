@@ -1,96 +1,55 @@
 package iteso.utils;
 
-import iteso.game.Board;
-
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.List;
-import java.util.ArrayList;
 
 public class KeyHandler implements KeyListener{
 
-    public static List<Key> keys = new ArrayList<Key>();
+    /**KEY DEFINITIONS */
+    public static final int JUMP = KeyEvent.VK_W;
+    public static final int LEFT = KeyEvent.VK_A;
+    public static final int RIGHT = KeyEvent.VK_D;
+    public static final int SHOOT = KeyEvent.VK_SPACE;
+    public static final int ESCAPE = KeyEvent.VK_ESCAPE;
+    public static final int BFB = KeyEvent.VK_Q;
 
-    public class Key {
-        public int presses, absorbs;
-        public boolean down, clicked;
 
-        public Key() {
-            keys.add(this);
-        }
-
-        public void toggle(boolean pressed) {
-            if(pressed != down) {
-                down = pressed;
-            }
-            if(pressed) {
-                presses++;
-            }
-        }
-
-        public void tick() {
-            if(absorbs < presses) {
-                absorbs++;
-                clicked = true;
-            } else {
-                clicked = false;
-            }
-        }
+    private boolean[] keyStatus; 
+    
+    public KeyHandler()
+    {
+        keyStatus = new boolean[256]; 
     }
-
-    public Key up = new Key();
-    public Key down = new Key();
-    public Key left = new Key();
-    public Key right = new Key();
-    public Key attack = new Key();
-    public Key menu = new Key();
-    public Key enter = new Key();
-    public Key escape = new Key();
-    public Key shift = new Key();
-    public Key f1 = new Key();
-
-    public KeyHandler(Board game) {
-        game.addKeyListener(this);
-    }
-
-    public void releaseAll() {
-        for(int i = 0; i < keys.size(); i++) {
-            keys.get(i).down = false;
+    
+    public boolean getKeyStatus(int keyCode)
+    {
+        if(keyCode < 0 || keyCode > 255)
+        {
+            return false; 
+        }
+        else
+        {
+            return keyStatus[keyCode]; 
         }
     }
-
-    public void tick() {
-        for(int i = 0; i < keys.size(); i++) {
-            keys.get(i).tick();
-        }
+    
+    public void resetController()
+    {
+        keyStatus = new boolean[256]; 
     }
-
-    public void toggle(KeyEvent e, boolean pressed) {
-        if(e.getKeyCode() == KeyEvent.VK_W) up.toggle(pressed);
-        if(e.getKeyCode() == KeyEvent.VK_S) down.toggle(pressed);
-        if(e.getKeyCode() == KeyEvent.VK_A) left.toggle(pressed);
-        if(e.getKeyCode() == KeyEvent.VK_D) right.toggle(pressed);
-        if(e.getKeyCode() == KeyEvent.VK_SPACE) attack.toggle(pressed);
-        if(e.getKeyCode() == KeyEvent.VK_E) menu.toggle(pressed);
-        if(e.getKeyCode() == KeyEvent.VK_ENTER) enter.toggle(pressed);
-        if(e.getKeyCode() == KeyEvent.VK_ESCAPE) escape.toggle(pressed);
-        if(e.getKeyCode() == KeyEvent.VK_F1) f1.toggle(pressed);
-        if(e.getKeyCode() == KeyEvent.VK_SHIFT) shift.toggle(pressed);
-    }
-
-
+    
     @Override
-    public void keyTyped(KeyEvent e) {
-        // do nothing
+    public void keyTyped(KeyEvent ke) {
+        //do nothing
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
-        toggle(e, true);
+    public void keyPressed(KeyEvent ke) {
+        keyStatus[ke.getKeyCode()] = true; 
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
-        toggle(e, false);
+    public void keyReleased(KeyEvent ke) {
+        keyStatus[ke.getKeyCode()] = false; 
     }
 }

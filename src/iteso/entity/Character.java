@@ -1,29 +1,32 @@
+/**
+ * TODO
+ * HP methods
+ * check functionality of color atribute
+ * 
+ */
+
+
 package iteso.entity;
 
-public  class Character {
-      private String name;
-      public int hp = 10;
-      public int x = 0;
-      public int y = 0;
-      public int speed;
-      public int width = 20;
-      public int height = 20;
+import java.awt.Color;
+import iteso.utils.MovingGameObject;
 
-    public Character(){
+public abstract class Character extends MovingGameObject {
+    private String name;
+    public int hp = 10;
+    public int width ;
+    public int height ;
+
+    protected Character(){
 
     };
 
-    public Character(int x,int y, int speed){
-        this.x = x;
-        this.y = y;
-        this.speed = speed;
+    protected Character(int xPosition, int yPosition, int xVelocity, int yVelocity, Color color, boolean visible){
+        super(xPosition, yPosition, xVelocity, yVelocity, null, true);
     }
 
-    public Character(String newName){
-        this.name = newName;
-    }
 
-    public String getName(){
+    protected String getName(){
         return this.name;
     }
 

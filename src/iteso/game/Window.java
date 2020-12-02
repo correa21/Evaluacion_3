@@ -6,17 +6,21 @@ import javax.swing.JFrame;
 public class Window extends JFrame {
 
     public static final long serialVersionUID = 1L;
-
+    private Board game;
 
     public Window() {
 
-        add(new Board());
-        setTitle("Juego Perron");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(720,280);
-        setLocationRelativeTo(null);
-        setResizable(false);
-        setVisible(true);
+        
+        this.setTitle("Juego Perron");
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setSize(720,280);
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
+        this.setVisible(true);
+        game = new Board();
+        this.pack();
+        this.getContentPane().add(game);
+        //game.
     }
 
 }

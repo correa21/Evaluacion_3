@@ -34,19 +34,13 @@ import javax.swing.ImageIcon;
 
 
 import iteso.entity.*;
+import iteso.utils.KeyHandler;
 
 
 
 
 public class Board  extends JPanel implements Runnable, MouseListener
 {
-/**KEY DEFINITIONS */
-    private static final int UPKEY      = 38;
-    private static final int DOWNKEY    = 40;
-    private static final int LEFTKEY    = 37;
-    private static final int RIGHTKEY   = 39;
-    private static final int SPACEBAR   = 32;
-    private static final int ESCAPEKEY  = 27;
 
     boolean ingame = true;
     private Dimension d;
@@ -64,48 +58,36 @@ public class Board  extends JPanel implements Runnable, MouseListener
     private static int bossHealth = 30;
 
     //added backGround
-    private ImageIcon backgroundd = new ImageIcon("images/backgroudSkinn.png");
+    private ImageIcon backgroundd = new ImageIcon("images/backgroudSkin.png");
 
+    //added array lists
+    private ArrayList<Bullet> bullets = new ArrayList();
 
+    //added objects
+    private Bullet bullet;
+
+    //added booleans
+    private boolean canFireNewBullet = true;
     private int newx = 0;
     private BufferedImage img;
     private Thread animator;
     private Player player;
     private Robot robots;
     private ArrayList<Robot> enemyList = new ArrayList<Robot>();
+    private KeyHandler controller = new KeyHandler();
 
  
     public Board()
     {
-        addKeyListener(new TAdapter());
-        addMouseListener(this);
-        setFocusable(true);
+        this.addKeyListener(controller);
+        this.setFocusable(true);
         d = new Dimension(BOARD_WIDTH, BOARD_HEIGHT);
-        setBackground(Color.black);
-        if (level == 1) {
-            //aquí pedir nombres y datos para el player
-            JOptionPane.showMessageDialog(null, "Welcome to Space Intruders!\n\nTHINGS TO KNOW:\n\n- Use left/right arrow keys to move\n- Press spacebar to shoot\n- The enemies get faster every level"
-                    + "\n- BOSS every 3 levels\n- A bonus enemy will appear randomly\n- Shoot it for extra points!\n- Press R to reset high score\n- All pixel art is original\n- PLAY WITH SOUND\n\nHAVE FUN!");
-        }
-        player = new Player("armando", "Gradak", 0, 120, 3);
-        
-           /*         
-             try {
-                img = ImageIO.read(this.getClass().getResource("mount.jpg"));
-            } catch (IOException e) {
-                 System.out.println("Image could not be read");
-            // System.exit(1);
-            }
-            */
-            if (animator == null || !ingame) {
-            animator = new Thread(this);
-            animator.start();
-            }
-                    
-            
+        this.setBackground(Color.black);
         setDoubleBuffered(true);
+            
     }
-    
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// PAINT
     @Override
     public void paint(Graphics g){
 
@@ -117,28 +99,20 @@ public class Board  extends JPanel implements Runnable, MouseListener
         //draw characters from this line below
         backgroundd.paintIcon(null, g, 0, 0);
         player.draw(g);
-
-        // player movement
-        //g.setColor(Color.red);
-        //g.fillRect(player.x, player.y, player.width, player.height);
-        if(player.getMoveRight() == true && player.x < (BOARD_WIDTH - (player.width * 5))){
-            player.x += player.speed;
-        }
-        if(player.getMoveLeft() == true && player.x > 0){
-            player.x -= player.speed;
-        }
-        if(player.getMoveUp() == true && player.y > 0){
-            player.y -= player.speed;
-        }
-        if(player.getMoveDown() == true && player.y < (BOARD_HEIGHT - (player.height * 8))){
-            player.y += player.speed;
-        }
-                Font small = new Font("Helvetica", Font.BOLD, 14);
+    
+                Font small = new Font("Helvetica", Font.BOLD, 20);
                 FontMetrics metr = this.getFontMetrics(small);
-                g.setColor(Color.black);
+                g.setColor(Color.pink);
                 g.setFont(small);
-                g.drawString(player.scoreToString(), 10, d.height-60);
-
+                g.drawString("SCORE: " + player.scoreToString(), 10, d.height-260);
+        if(player.isShooting() && canFireNewBullet){
+            bullet = new Bullet(player.getXPosition()+45, player.getYPosition()+55, 0, null, true);
+            canFireNewBullet = false;
+            bullets.add(bullet);
+        }
+        for(int index = 0; index < bullets.size(); index++){
+                bullets.get(index).draw(g);
+        }
             if (ingame) {
                 
             
@@ -148,76 +122,47 @@ public class Board  extends JPanel implements Runnable, MouseListener
             // g.drawImage(img,0,0,200,200 ,null);
             }
         Toolkit.getDefaultToolkit().sync();
-        System.out.println("posicion "+player.x+ " "+ player.y);
         g.dispose();
     }
 
-    private class TAdapter extends KeyAdapter {
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// UPDATE GAME STATE
 
-        public void keyReleased(KeyEvent e) {
-            int key = e.getKeyCode();
-            if(key==RIGHTKEY){
-                player.setMoveRight(false);
+    public void updateGameState(){
+        player.move();
+        for(int index = 0; index < bullets.size(); index++){
+            bullets.get(index).move();
+            if (bullet.getXPosition() > (player.getXPosition()+250)){
+                canFireNewBullet = true;
             }
-            if(key==LEFTKEY){
-                player.setMoveLeft(false);
-            }
-            if(key==UPKEY){
-                player.setMoveUp(false);
-            }
-            if(key==DOWNKEY){
-                player.setMoveDown(false);
-            }
-            if(key==SPACEBAR){
-                player.stopShooting();
-            }  
-        }
-
-        public void keyPressed(KeyEvent e) {
-        //System.out.println( e.getKeyCode());
-        // message = "Key Pressed: " + e.getKeyCode();
-            int key = e.getKeyCode();
-                if(key==RIGHTKEY){
-                    player.setMoveRight(true);
-                }
-                if(key==LEFTKEY){
-                    player.setMoveLeft(true);
-                }
-                if(key==UPKEY){
-                    player.setMoveUp(true);
-                }
-                if(key==DOWNKEY){
-                    player.setMoveDown(true);
-                }
-                if(key==SPACEBAR){
-                    player.startShooting();
-                }
-                if(key==ESCAPEKEY){
-                    //change a flag and pause the game
-                }
         }
     }
-
-    public void mousePressed(MouseEvent e) {
-        int x = e.getX();
-        int y = e.getY();
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// SETUP GAME
+    public final void setupGame(){
+        if (level == 1) {
+            //aquí pedir nombres y datos para el player
+            JOptionPane.showMessageDialog(null, "Welcome to Space Intruders!\n\nTHINGS TO KNOW:\n\n- Use left/right arrow keys to move\n- Press spacebar to shoot\n- The enemies get faster every level"
+                    + "\n- BOSS every 3 levels\n- A bonus enemy will appear randomly\n- Shoot it for extra points!\n- Press R to reset high score\n- All pixel art is original\n- PLAY WITH SOUND\n\nHAVE FUN!");
+        }
+        player = new Player("ARmando", "Gradak", 0, 120, null, controller);
+        
+            /*         
+            try {
+                img = ImageIO.read(this.getClass().getResource("mount.jpg"));
+            } catch (IOException e) {
+                System.out.println("Image could not be read");
+            // System.exit(1);
+            }
+            */
+            if (animator == null || !ingame) {
+            animator = new Thread(this);
+            animator.start();
+            }
+                    
     }
 
-    public void mouseReleased(MouseEvent e) {
-    //
-    }
 
-    public void mouseEntered(MouseEvent e) {
-    //
-    }
-
-    public void mouseExited(MouseEvent e) {
-    //
-    }
-
-    public void mouseClicked(MouseEvent e) {
-    //
-    }
 
     public void run() {
 
@@ -227,6 +172,7 @@ public class Board  extends JPanel implements Runnable, MouseListener
         int animationDelay = 15;
         long time = System.currentTimeMillis();
             while (true) {//infinite loop
+                updateGameState();
                 repaint();
                 try {
                     time += animationDelay;

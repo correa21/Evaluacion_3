@@ -12,6 +12,6 @@ public class Dron extends Robot implements Drawable {
 
     @Override
     public void draw(Graphics g) {
-        dron.paintIcon(null, g, this.x, this.y);
+        dron.paintIcon(null, g, this.xPos, this.yPos);
     }
 }

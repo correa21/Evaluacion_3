@@ -8,6 +8,7 @@ DESTINATION = ./target
 	$(JC) $(JCPFLAG) $(CLASSPATH) $*.java $(JDFLAGS) $(DESTINATION)
 
 CLASSES = \
+		./src/iteso/utils/*.java \
 		./src/iteso/entity/*.java \
 		./src/iteso/calendar/*.java \
 		./src/iteso/statistics/*.java \
