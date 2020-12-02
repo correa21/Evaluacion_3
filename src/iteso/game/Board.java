@@ -35,9 +35,7 @@ import iteso.entity.Dron;
 import iteso.entity.Human;
 import iteso.entity.Player;
 import iteso.utils.KeyHandler;
-
-
-
+import javax.swing.*;
 
 public class Board  extends JPanel implements Runnable
 {
@@ -82,6 +80,10 @@ public class Board  extends JPanel implements Runnable
     private int newx = 0;
     private BufferedImage img;
     private Thread animator;
+
+    private JTextField playerName = new JTextField(20);
+    private JTextField playerNickName = new JTextField(20);
+    private JPanel loginMenu = new JPanel();
     
     
     private KeyHandler controller;
@@ -105,11 +107,21 @@ public class Board  extends JPanel implements Runnable
              * PARA CREAR EL PLAYER 
              * DESPUES
             */
+            Object[] field = {
+                    "Nombre", playerName,
+                    "Nickname", playerNickName
+            };
+
+            int option = JOptionPane.showConfirmDialog(null, field, "Log-in", JOptionPane.OK_CANCEL_OPTION);
+            if (option == JOptionPane.OK_OPTION) {
+                player = new Player(playerName.getText(), playerNickName.getText(), 0, 120, null, controller);
+            }
+            else {
+                System.exit(0);
+            }
         }
         // Resets all controller movement
         controller.resetController();
-
-        player = new Player("ARmando", "Gradak", 0, 120, null, controller);
 
         // Sets the life counter Ships
         for (int column = 0; column < numberOfLives; column++) {
@@ -308,6 +320,7 @@ public class Board  extends JPanel implements Runnable
                 int answer = JOptionPane.showConfirmDialog(null, "Would you like to play again?", "You lost the game with " + player.getBestScore() + " points", 0);
                 // If they choose to play again, this resets every element in the game
                 if (answer == 0) {
+                    pause = false;
                     lifeList.clear();
                     enemyList.clear();
                     robotBullets.clear();
@@ -324,6 +337,7 @@ public class Board  extends JPanel implements Runnable
             }
 
             if(controller.getKeyStatus(controller.ESCAPE) == true){
+                controller.setKeyStatus(controller.ESCAPE,false);
                 pause = true;
             }
             
@@ -343,6 +357,7 @@ public class Board  extends JPanel implements Runnable
                     //JOptionPane.getRootFrame().dispose();
                 }
                 case 1 -> {
+                    pause = false;
                     lifeList.clear();
                     enemyList.clear();
                     robotBullets.clear();
@@ -352,6 +367,7 @@ public class Board  extends JPanel implements Runnable
                     newRobotCanFire = true;
                     setupBoard();
                 }
+
                 case 2 -> System.exit(0);
             }
 
