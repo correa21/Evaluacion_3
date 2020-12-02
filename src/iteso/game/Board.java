@@ -43,6 +43,7 @@ public class Board  extends JPanel implements Runnable
 {
 
     boolean ingame = true;
+    boolean pause = false;
     private Dimension d;
     private final int BOARD_WIDTH=720;
     private final int BOARD_HEIGHT=280;
@@ -61,39 +62,35 @@ public class Board  extends JPanel implements Runnable
     private ImageIcon backgroundd = new ImageIcon("images/backgroudSkin.png");
 
     //added array lists
-    private ArrayList<Bullet> bullets = new ArrayList();
+    private ArrayList<Bullet> bullets = new ArrayList<>();
+    private ArrayList<Dron> enemyList = new ArrayList<>();
+    private ArrayList<Bullet> robotBullets = new ArrayList<>();
+
 
     //added objects
     private Bullet bullet;
+    private Dron robots = new Dron(0, 0, false, 0);
+    private Player player;
+    private Bullet robotBullet;
 
     //added booleans
     private boolean canFireNewBullet = true;
+    private boolean newRobotCanFire = true;
     private int newx = 0;
     private BufferedImage img;
     private Thread animator;
-    private Player player;
-    private Robot robots;
-    private ArrayList<Robot> enemyList = new ArrayList<Robot>();
+    
+    
     private KeyHandler controller;
 
     public void setupBoard(){
         // Sets enemies for normal levels
         if (level != 3 && level != 6 && level != 9 && level != 12) {
-            // Six rows
-            for (int row = 0; row < 6; row++) {
-                // 5 columns
-                for (int column = 0; column < 4; column++) {
-                    if(r.nextInt(2)%1 == 0){
-                        robots = new Dron(BOARD_WIDTH-Dron.WIDTH, BOARD_HEIGHT-Dron.HEIGTH, true, level);
-                        enemyList.add(robots);
-                    }
-                    else{
-                        robots = new Dron(BOARD_WIDTH-Dron.WIDTH, BOARD_HEIGHT-Dron.HEIGTH, true, level);
-                        enemyList.add(robots);
-                    }
-                    
-                }
+            for(int index = 0; index < level * 3; index++){
+                robots = new Dron(BOARD_WIDTH+Dron.WIDTH+(Dron.WIDTH*index), d.height-250, false, level);
+                enemyList.add(robots);
             }
+                
         }
     
         // Gives directions on level 1
@@ -129,7 +126,8 @@ public class Board  extends JPanel implements Runnable
         }
 
     }
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// PAINT
     @Override
     public void paint(Graphics g){
 
@@ -147,15 +145,55 @@ public class Board  extends JPanel implements Runnable
                 g.setColor(Color.pink);
                 g.setFont(small);
                 g.drawString("SCORE: " + player.scoreToString(), 10, d.height-260);
+        //create player bullets
         if(player.isShooting() && canFireNewBullet){
             bullet = new Bullet(player.getXPosition()+45, player.getYPosition()+55, 0, null, true);
+            bullet.setBulletGraphic("images/bullet.gif");
             canFireNewBullet = false;
             bullets.add(bullet);
         }
+        //BFB shooting
+        if(player.isBFBReady() && canFireNewBullet){
+            bullet = new Bullet(player.getXPosition()+45, player.getYPosition()+55, 0, null, true);
+            bullet.setBulletGraphic("images/bullet.gif");
+            canFireNewBullet = false;
+            bullets.add(bullet);
+        }
+        //draw player bullets
         for(int index = 0; index < bullets.size(); index++){
                 bullets.get(index).draw(g);
         }
-        
+        //draw enemy
+        for(int index = 0; index < enemyList.size(); index++){
+            if ((enemyList.get(index).getXPosition() < 650) && 
+            (enemyList.get(index).getVisible() == false)) {
+                enemyList.get(index).setVisibile(true);
+            }
+            System.out.println("soy el robot "+index+" y estoy en x= "+ enemyList.get(index).getXPosition()+" Y = " +enemyList.get(index).getYPosition());
+            enemyList.get(index).draw(g);          
+    }
+        //create enemy bullets
+        if (newRobotCanFire) {
+            for (int index = 0; index < enemyList.size(); index++) {
+                    if(enemyList.get(index).getXVelocity() < 0){
+                        robotBullet = new Bullet(enemyList.get(index).getXPosition()+Dron.WIDTH-25, enemyList.get(index).getYPosition(), 0, null, true);
+                    }
+                    else{
+                        robotBullet = new Bullet(enemyList.get(index).getXPosition(), enemyList.get(index).getYPosition(), 0, null, true);
+                    }
+                    robotBullet.setYVelocity(robotBullet.getXVelocity());
+                    robotBullet.setXVelocity(0);
+                    robotBullet.setBulletGraphic("images/robotBullet.gif");
+                    robotBullets.add(robotBullet);
+                    System.out.println("hay esta cantidad de balas de robot"+robotBullets.size());
+                
+            }
+            newRobotCanFire = false;
+        }
+        // Draws the robots bullets
+        for (int index = 0; index < robotBullets.size(); index++) {
+            robotBullets.get(index).draw(g);
+        }
         Toolkit.getDefaultToolkit().sync();
         g.dispose();
     }
@@ -164,8 +202,9 @@ public class Board  extends JPanel implements Runnable
 // UPDATE GAME STATE
 
     public void updateGameState(){
-        if (ingame){
+        if (!pause){
             player.move();
+            //move player bullets
             for(int index = 0; index < bullets.size(); index++){
                 bullets.get(index).move();
                 if (bullet.getXPosition() > (player.getXPosition()+250)){
@@ -177,10 +216,38 @@ public class Board  extends JPanel implements Runnable
                 }
                 System.out.println(bullets.size());
             }
+            //move enemy
+            for(int index = 0; index < enemyList.size(); index++){
+                
+                if (enemyList.get(index).getVisible()){
+                    if ((enemyList.get(index).getXPosition() + enemyList.get(index).getXVelocity() < 0) || 
+                        (enemyList.get(index).getXPosition() + enemyList.get(index).getXVelocity() > 650)) {
+                    enemyList.get(index).setXVelocity(enemyList.get(index).getXVelocity()*(-1));
+                    }
+                }
+                enemyList.get(index).move();
+            }
+            //move robot bullets
+            for(int index = 0; index < robotBullets.size(); index++){
+                robotBullets.get(index).move();
+                if (robotBullet.getYPosition() > 135){
+                    newRobotCanFire = true;
+                }
+                if (robotBullets.get(index).getYPosition()+robotBullets.get(index).getYVelocity() > BOARD_HEIGHT-130){
+                    robotBullets.remove(index);
+                }
+            }
+            if(controller.getKeyStatus(controller.ESCAPE) == true){
+                pause = true;
+            }
+            
         }
         else{
             //agregar opciones de pausa aquí
-
+            System.out.println("estoy en pausa");
+            if(controller.getKeyStatus(controller.ESCAPE)){
+                pause = false;
+            }
         }
     }
 

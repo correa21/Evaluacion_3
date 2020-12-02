@@ -52,11 +52,7 @@ public class Player extends Human {
     // Draw player controlled ship
     @Override
     public void draw(Graphics g) {
-        if (isVisible){
             mainCharacter.paintIcon(null, g, this.getXPosition(), this.getYPosition());
-        }
-        
-
     }
 
     // Gets the hit box for all ship objects

@@ -7,13 +7,11 @@ import java.awt.Color;
 public class Robot extends Character {
     private String serialId;
 
-    private boolean moveForward;
+    private boolean shoot;
 
 
     public Robot(int xPosition, int yPosition, int xVelocity, int yVelocity, boolean visible, int width, int heigth) {
         super(xPosition, yPosition, xVelocity, yVelocity, null, visible, width, heigth);
-        moveForward = true;
-        isVisible = false;
     }
 
     @Override

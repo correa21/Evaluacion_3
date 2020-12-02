@@ -9,23 +9,31 @@ import javax.swing.ImageIcon;
 
 public class Dron extends Robot {
 
-    public static final int WIDTH = 153;
-    public static final int HEIGTH = 210;
+    public static final int WIDTH = 77;
+    public static final int HEIGTH = 105;
+    private static final int SPEED = 2;
 
-    ImageIcon dronIcon = new ImageIcon("images/dron.gif");
+    ImageIcon dronIconL = new ImageIcon("images/dron2.gif");
+    ImageIcon dronIconR = new ImageIcon("images/dron.gif");
+    ImageIcon invisible = new ImageIcon("images/invisible.png");
 
     public Dron (int xPosition, int yPosition, boolean visible, int level){
-        super(xPosition, yPosition, level, level, visible, WIDTH, HEIGTH);
+        super(xPosition, yPosition, -level*SPEED, 0, visible, WIDTH, HEIGTH);
 
     }
     @Override
     public void draw(Graphics g) {
-        if (this.isVisible){
-            dronIcon.paintIcon(null, g, this.xPos, this.yPos);
+        if (this.getVisible()){
+            if(this.getXVelocity() < 0){
+                dronIconL.paintIcon(null, g, this.xPos, this.yPos);
+            }
+            else{
+                dronIconR.paintIcon(null, g, this.xPos, this.yPos);
+            }
+            
         }
         else{
-            g.setColor(color);
-            g.fillRect(this.getXPosition(), this.getYPosition(), Dron.WIDTH, Dron.HEIGTH);
+            invisible.paintIcon(null, g, this.xPos, this.yPos);
         }
     }
 
@@ -33,5 +41,9 @@ public class Dron extends Robot {
     public Rectangle getBounds() {
         Rectangle enemyHitBox = new Rectangle(this.getXPosition(), this.getYPosition(), Dron.WIDTH, Dron.HEIGTH);
         return enemyHitBox;
+    }
+    @Override
+    public void move() {
+        this.xPos += this.getXVelocity();
     }
 }

@@ -9,7 +9,8 @@ import iteso.utils.KeyHandler;
 public class Human extends ControlledCharacter {
     private boolean moveLeft, moveRight, moveUp, moveDown; 
     private boolean shoot;
-    protected int bfbMetter;
+    private boolean pause;
+    protected int bfbMetter = 1000;
     protected static final int BFBREADY = 1000;
     protected  int width = 150;
     protected int height = 120;
@@ -46,6 +47,9 @@ public class Human extends ControlledCharacter {
         moveDown = state;
     }
 
+    public void setPause(boolean state){
+        pause = state;
+    }
     public boolean getMoveLeft() {
         return moveLeft;
     }
@@ -62,6 +66,9 @@ public class Human extends ControlledCharacter {
         return moveDown;
     }
 
+    public boolean isBFBReady(){
+        return bfb;
+    }
     public void startShooting() {
         shoot = true;
     }
@@ -72,14 +79,12 @@ public class Human extends ControlledCharacter {
     public void shootBFB(){
         if (bfbMetter >= BFBREADY){
             bfb = true;
+            bfbMetter -= BFBREADY;
         }
         else{
             bfb = false;
         }
             
-    }
-    public void loadBFB(){
-        bfb = false;
     }
 
     public void stopMoving() {

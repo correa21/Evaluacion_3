@@ -9,18 +9,16 @@ public abstract class GameObject implements Drawable {
     protected int yPos;
     protected Color color;
     protected boolean isColliding;
-    protected boolean isVisible;
     
     protected GameObject(){
 
     }
     
     // Constuctor for any Game Object
-    protected GameObject(int xPosition, int yPosition, Color color, boolean visible) {
+    protected GameObject(int xPosition, int yPosition, Color color) {
         this.xPos = xPosition;
         this.yPos = yPosition;
         this.color = color;
-        this.isVisible = visible;
     }
 
     public abstract Rectangle getBounds();
@@ -54,6 +52,7 @@ public abstract class GameObject implements Drawable {
     public void setColor(Color color) {
         this.color = color;
     }
+
 
     // Checks if the hitboxes of any two objects are intersecting
     public boolean isColliding(GameObject other) {
