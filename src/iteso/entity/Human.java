@@ -9,7 +9,7 @@ import iteso.utils.KeyHandler;
 public class Human extends ControlledCharacter {
     private boolean moveLeft, moveRight, moveUp, moveDown; 
     private boolean shoot;
-    private boolean pause;
+    private boolean pause = true;
     protected int bfbMetter;
     protected static final int BFBREADY = 1000;
     protected  int width = 150;
