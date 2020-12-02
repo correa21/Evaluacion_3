@@ -12,7 +12,6 @@
  * shoot beam
  */
 
-
 package iteso.game;
 
 import java.awt.Color;
@@ -22,7 +21,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -30,6 +28,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import iteso.entity.BigRobot;
 import iteso.entity.Bullet;
 import iteso.entity.Dron;
 import iteso.entity.Human;
@@ -51,29 +50,29 @@ public class Board  extends JPanel implements Runnable
 
     // Added Counters
     Random r = new Random();
-    private int score = 0;
     private int level = 1;
     private int numberOfLives = 3;
     private Human singleLife;
-    private int highScore;
     private int markerX, markerY;
-    private static int bossHealth = 30;
 
     //added backGround
     private ImageIcon backgroundd = new ImageIcon("images/backgroudSkin.png");
 
     //added array lists
     private ArrayList<Bullet> bullets = new ArrayList<>();
-    private ArrayList<Dron> enemyList = new ArrayList<>();
+    private ArrayList<Dron> dronList = new ArrayList<>();
+    private ArrayList<BigRobot> brList = new ArrayList<>();
     private ArrayList<Bullet> robotBullets = new ArrayList<>();
     private ArrayList<Human> lifeList = new ArrayList<>();
 
 
     //added objects
     private Bullet bullet;
-    private Dron robots = new Dron(0, 0, false, 0);
+    private Dron dron = new Dron(0, 0, false, 0);
+    private BigRobot roboto = new BigRobot(0,0,false,0);
     private Player player;
     private Bullet robotBullet;
+    private Bullet dronBullet;
 
     //added booleans
     private boolean canFireNewBullet = true;
@@ -88,14 +87,18 @@ public class Board  extends JPanel implements Runnable
 
     public void setupBoard(){
         // Sets enemies for normal levels
-        if (level != 3 && level != 6 && level != 9 && level != 12) {
-            for(int index = 0; index < level * 3; index++){
-                robots = new Dron(BOARD_WIDTH+Dron.WIDTH+(Dron.WIDTH*index), d.height-250, false, level);
-                enemyList.add(robots);
+        for(int index = 0; index < level * 5; index++){
+            if (index%2 == 0){
+                dron = new Dron(BOARD_WIDTH+Dron.WIDTH+(Dron.WIDTH*index), d.height-250, false, level);
+                dronList.add(dron);
+            }else{
+                roboto = new BigRobot(BOARD_WIDTH+Dron.WIDTH+(Dron.WIDTH*index), d.height-150, false, level);
+                brList.add(roboto);
             }
-                
+            
         }
-    
+        dron = new Dron(0, 0, false, 0);
+        roboto = new BigRobot(0,0,false,0);
         // Gives directions on level 1
         if (level == 1) {
             JOptionPane.showMessageDialog(null, "Welcome to Space Intruders!\n\nTHINGS TO KNOW:\n\n- Use left/right arrow keys to move\n- Press spacebar to shoot\n- The enemies get faster every level"
@@ -154,11 +157,9 @@ public class Board  extends JPanel implements Runnable
         if (bullet != null) {
             if (hitMarker) {
                 g.setColor(Color.pink);
-                if (level != 3 && level != 6 && level != 9 && level != 12) {
-                    g.drawString("+ 100", markerX + 20, markerY -= 1);
-                } else {
-                    g.drawString("- 1", markerX + 75, markerY += 1);
-                }
+                
+                g.drawString("+ 100", markerX + 20, markerY -= 1);
+                
             }
         }
 
@@ -195,32 +196,47 @@ public class Board  extends JPanel implements Runnable
                 bullets.get(index).draw(g);
         }
         //draw enemy
-        for(int index = 0; index < enemyList.size(); index++){
-            if ((enemyList.get(index).getXPosition() < 650) && 
-            (enemyList.get(index).getVisible() == false)) {
-                enemyList.get(index).setVisibile(true);
+        for(int index = 0; index < dronList.size(); index++){
+            if ((dronList.get(index).getXPosition() < 650) && 
+            (dronList.get(index).getVisible() == false)) {
+                dronList.get(index).setVisibile(true);
             }
-            enemyList.get(index).draw(g);          
-    }
+            dronList.get(index).draw(g);          
+        }
+        for(int index = 0; index < brList.size(); index++){
+            if ((brList.get(index).getXPosition() < 650) && 
+            (brList.get(index).getVisible() == false)) {
+                brList.get(index).setVisibile(true);
+            }
+            brList.get(index).draw(g);          
+        }
         //create enemy bullets
         if (newRobotCanFire) {
-            for (int index = 0; index < enemyList.size(); index++) {
-                if(enemyList.get(index).getXVelocity() < 0){
-                    robotBullet = new Bullet(enemyList.get(index).getXPosition()+Dron.WIDTH-25, enemyList.get(index).getYPosition(), 0, null, true);
-                }
-                else{
-                    robotBullet = new Bullet(enemyList.get(index).getXPosition(), enemyList.get(index).getYPosition(), 0, null, true);
-                }
-                robotBullet.setYVelocity(robotBullet.getXVelocity());
-                robotBullet.setXVelocity(0);
-                robotBullet.setBulletGraphic("images/robotBullet.gif");
-                robotBullets.add(robotBullet);
+            for (int index = 0; index < dronList.size(); index++) {
+                    if(dronList.get(index).getXVelocity() < 0){
+                        robotBullet = new Bullet(dronList.get(index).getXPosition()+Dron.WIDTH-25, dronList.get(index).getYPosition(), 0, null, false);
+                    }
+                    else{
+                        robotBullet = new Bullet(dronList.get(index).getXPosition(), dronList.get(index).getYPosition(), 0, null, false);
+                    }
+                    robotBullet.setYVelocity(robotBullet.getXVelocity()/5);
+                    robotBullet.setXVelocity(0);
+                    robotBullet.setBulletGraphic("images/robotBullet.gif");
+                    robotBullets.add(robotBullet);
+                
             }
             newRobotCanFire = false;
         }
+        
         // Draws the robots bullets
         for (int index = 0; index < robotBullets.size(); index++) {
-            robotBullets.get(index).draw(g);
+            if( !dronList.isEmpty()){
+                if(dronList.get(0).getVisible()){
+                    robotBullets.get(index).setVisibile(true);
+                    robotBullets.get(index).draw(g);
+                }
+            }
+            
         }
         Toolkit.getDefaultToolkit().sync();
         g.dispose();
@@ -239,21 +255,32 @@ public class Board  extends JPanel implements Runnable
                     canFireNewBullet = true;
                 }
                 // Checks for collisions with normal enemies
-                for (int enemyIndex = 0; enemyIndex < enemyList.size(); enemyIndex++) {
-                    System.out.println("enemigo "+enemyIndex+" bala "+index);
-                    if ((bullets.isEmpty() != true) && (bullets.get(index).isColliding(enemyList.get(enemyIndex)))) {
+                for (int enemyIndex = 0; enemyIndex < dronList.size(); enemyIndex++) {
+                    if ((bullets.isEmpty() != true) && (bullets.get(index).isColliding(dronList.get(enemyIndex)))) {
                         bullets.remove(index);
                         canFireNewBullet = true;
                         // Updates score for normal levels
-                        if (level != 3 && level != 6 && level != 9 && level != 12) {
                             player.setBestScore(player.getBestScore()+100);
-                            player.bfbMetter += 10000;
+                            player.bfbMetter += 100;
                             hitMarker = true;
-                            markerX = enemyList.get(index).getXPosition(); // Gets positions that the "+ 100" spawns off of
-                            markerY = enemyList.get(index).getYPosition();
-                            enemyList.remove(enemyIndex);
-
-                        }
+                            markerX = dronList.get(enemyIndex).getXPosition(); // Gets positions that the "+ 100" spawns off of
+                            markerY = dronList.get(enemyIndex).getYPosition();
+                            dronList.remove(enemyIndex);
+                    }else{
+                        break;
+                    }
+                }
+                for (int enemyIndex = 0; enemyIndex < brList.size(); enemyIndex++) {
+                    if ((bullets.isEmpty() != true) && (bullets.get(index).isColliding(brList.get(enemyIndex)))) {
+                        bullets.remove(index);
+                        canFireNewBullet = true;
+                        // Updates score for normal levels
+                            player.setBestScore(player.getBestScore()+(100*level));
+                            player.bfbMetter += (100*level);
+                            hitMarker = true;
+                            markerX = brList.get(enemyIndex).getXPosition(); // Gets positions that the "+ 100" spawns off of
+                            markerY = brList.get(enemyIndex).getYPosition();
+                            brList.remove(enemyIndex);
                     }else{
                         break;
                     }
@@ -264,21 +291,25 @@ public class Board  extends JPanel implements Runnable
                     break;
                 }
                 //check if bullet out of screen limit
-                if (bullets.get(index).getXPosition() > BOARD_WIDTH){
-                    bullets.remove(index);
+                if (bullets.get(0).getXPosition() > BOARD_WIDTH){
+                    bullets.remove(0);
                     canFireNewBullet = true;
                 }
             }
-            //move enemy
-            for(int index = 0; index < enemyList.size(); index++){
+            //move dron
+            for(int index = 0; index < dronList.size(); index++){
                 
-                if (enemyList.get(index).getVisible()){
-                    if ((enemyList.get(index).getXPosition() + enemyList.get(index).getXVelocity() < 0) || 
-                        (enemyList.get(index).getXPosition() + enemyList.get(index).getXVelocity() > 650)) {
-                    enemyList.get(index).setXVelocity(enemyList.get(index).getXVelocity()*(-1));
+                if (dronList.get(index).getVisible()){
+                    if ((dronList.get(index).getXPosition() + dronList.get(index).getXVelocity() < 0) || 
+                        (dronList.get(index).getXPosition() + dronList.get(index).getXVelocity() > 650)) {
+                    dronList.get(index).setXVelocity(dronList.get(index).getXVelocity()*(-1));
                     }
                 }
-                enemyList.get(index).move();
+                dronList.get(index).move();
+            }
+            //move big robot
+            for(int index = 0; index < brList.size(); index++){
+                brList.get(index).move();
             }
             //move robot bullets
             for(int index = 0; index < robotBullets.size(); index++){
@@ -286,7 +317,7 @@ public class Board  extends JPanel implements Runnable
                 if (robotBullet.getYPosition() > 135){
                     newRobotCanFire = true;
                 }
-                if (robotBullets.get(index).getYPosition()+robotBullets.get(index).getYVelocity() > BOARD_HEIGHT-130){
+                if ((robotBullets.get(index).getYPosition()+robotBullets.get(index).getYVelocity() > BOARD_HEIGHT-130)){
                     robotBullets.remove(index);
                 }
             }
@@ -309,8 +340,9 @@ public class Board  extends JPanel implements Runnable
                 // If they choose to play again, this resets every element in the game
                 if (answer == 0) {
                     lifeList.clear();
-                    enemyList.clear();
+                    dronList.clear();
                     robotBullets.clear();
+                    bullets.clear();
                     level = 1;
                     numberOfLives = 3;
                     canFireNewBullet = true;
@@ -321,6 +353,14 @@ public class Board  extends JPanel implements Runnable
                 if (answer == 1) {
                     System.exit(0);
                 }
+            }
+             // Goes to next level, resets all lists, sets all counters to correct values
+            if (dronList.isEmpty() && brList.isEmpty()){
+                robotBullets.clear();
+                lifeList.clear();
+                bullets.clear();
+                level += 1;
+                setupBoard();
             }
             if(controller.getKeyStatus(controller.ESCAPE) == true){
                 pause = true;

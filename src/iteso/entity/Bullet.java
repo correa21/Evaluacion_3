@@ -21,6 +21,7 @@ public class Bullet extends MovingGameObject {
     private int xVelocity = 10;
     private ImageIcon bullett;
     private boolean isBFB = false;
+    private ImageIcon invisible = new ImageIcon("images/invisible.png");
 
     // Constructor for bullet
     public Bullet(int xPosition, int yPosition, int diameter, Color color, boolean visible) {
@@ -44,14 +45,17 @@ public class Bullet extends MovingGameObject {
             bullett.paintIcon(null, g, this.getXPosition(), this.getYPosition());
         }
         else{
-            g.setColor(null);
-            g.fillRect(this.getXPosition(), this.getYPosition(), 101, 22);
+            invisible.paintIcon(null, g, this.getXPosition(), this.getYPosition());
         }
     }
 
     @Override
     public Rectangle getBounds() {
-        if (isBFB){
+        if(!this.getVisible()){
+            Rectangle bulletHitbox = new Rectangle(0, 0, 0, 0);
+            return bulletHitbox;
+        }
+        else if (isBFB){
             Rectangle bulletHitbox = new Rectangle(xPos, yPos, 203, 45);
             return bulletHitbox;
         }
