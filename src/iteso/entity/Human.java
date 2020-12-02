@@ -3,17 +3,20 @@ package iteso.entity;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Color;
+import javax.swing.ImageIcon;
+
 
 import iteso.utils.KeyHandler;
 
 public class Human extends ControlledCharacter {
     private boolean moveLeft, moveRight, moveUp, moveDown; 
     private boolean shoot;
-    protected int bfbMetter;
+    public int bfbMetter = 0;
     protected static final int BFBREADY = 1000;
-    protected  int width = 150;
-    protected int height = 120;
-    private boolean bfb = false;
+    protected  int width = 54;
+    protected int height = 86;
+    ImageIcon life = new ImageIcon("images/life.gif");
+
 
     public Human(){
         super();
@@ -62,18 +65,21 @@ public class Human extends ControlledCharacter {
         return moveDown;
     }
 
+    public boolean isBFBReady(){
+        if (bfbMetter >= BFBREADY){
+            bfbMetter -= BFBREADY;
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
     public void startShooting() {
         shoot = true;
     }
 
     public void stopShooting() {
         shoot = false;
-    }
-    public void shootBFB(){
-        bfb = true;
-    }
-    public void loadBFB(){
-        bfb = false;
     }
 
     public void stopMoving() {
@@ -83,6 +89,10 @@ public class Human extends ControlledCharacter {
         setMoveUp(false);
     }
 
+    public void drawLife(Graphics g){
+        life.paintIcon(null, g, this.getXPosition(), this.getYPosition());
+
+    }
 
     @Override
     public Rectangle getBounds() {

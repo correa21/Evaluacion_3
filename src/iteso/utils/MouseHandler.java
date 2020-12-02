@@ -1,11 +1,10 @@
 package iteso.utils;
 
-
-import iteso.game.Board;
-
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+
+import iteso.game.Board;
 
 public class MouseHandler implements MouseListener, MouseMotionListener {
 

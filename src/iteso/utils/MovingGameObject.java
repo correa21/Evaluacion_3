@@ -3,19 +3,18 @@ package iteso.utils;
 import java.awt.Color;
 
 public abstract class MovingGameObject extends GameObject implements Moveable{
-    
-    int xVel;
-    int yVel;
+    private boolean isVisible = false;
+    private int xVel;
+    private int yVel;
 
-    protected MovingGameObject(){
-        
-    }
     
     // Constructor for any non controllable object
-    protected MovingGameObject(int xPosition, int yPosition, int xVelocity, int yVelocity, Color color, boolean visible){
-        super(xPosition, yPosition, color, visible);
+    protected MovingGameObject(int xPosition, int yPosition, int xVelocity,
+                               int yVelocity, Color color, boolean visible){
+        super(xPosition, yPosition, color);
         this.xVel = xVelocity;
         this.yVel = yVelocity;
+        this.isVisible = visible;
     
     }
     
@@ -36,8 +35,14 @@ public abstract class MovingGameObject extends GameObject implements Moveable{
     {
         this.yVel = yVelocity;
     }
+    public boolean getVisible(){
+        return this.isVisible;
+    }
+    public void setVisibile(boolean state){
+        this.isVisible = state;
+    }
+
     @Override
-    
     // Used to move non controllable objects
     public void move()
     {

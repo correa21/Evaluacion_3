@@ -15,7 +15,7 @@ public class Player extends Human {
     private static final int LEFTBOUND = 0;
     private static final int RIGHTBOUND = 720 - (150);
     private static final int SPEED = 3;
-    private static final int JUMPHEIGHT = 1;
+    private static final int JUMPHEIGHT = 4;
     ImageIcon mainCharacter = new ImageIcon("images/MC2.gif");
 
     public Player(){
@@ -52,11 +52,7 @@ public class Player extends Human {
     // Draw player controlled ship
     @Override
     public void draw(Graphics g) {
-        if (isVisible){
             mainCharacter.paintIcon(null, g, this.getXPosition(), this.getYPosition());
-        }
-        
-
     }
 
     // Gets the hit box for all ship objects
@@ -84,23 +80,24 @@ public class Player extends Human {
             stopMoving();
         }
         //Up arrow key press 
-        // if (control.getKeyStatus(control.JUMP)){
-        //     while (this.yPos < (this.height*2)){
-        //         this.yPos -= JUMPHEIGHT;
-        //     }
-        // }else{
-        //     while(this.yPos > height){
-        //         this.yPos += JUMPHEIGHT;
-        //     }
-        // }
+        if (control.getKeyStatus(control.JUMP)){
+            if(this.yPos > 15){//up limit
+                this.yPos -= JUMPHEIGHT*SPEED;
+            }
+            
+        }
+        else {
+            if (this.yPos >= (220-100)) {
+                stopMoving();
+            }
+            else
+                this.yPos += JUMPHEIGHT*(SPEED/2);
+        }
         if (control.getKeyStatus(control.SHOOT)){
             startShooting();
         }
         else{
             stopShooting();
-        }
-        if (control.getKeyStatus(control.BFB) && (bfbMetter >= BFBREADY)){
-            shootBFB();
         }
     }
 }
