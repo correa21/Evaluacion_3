@@ -70,7 +70,13 @@ public class Human extends ControlledCharacter {
         shoot = false;
     }
     public void shootBFB(){
-        bfb = true;
+        if (bfbMetter >= BFBREADY){
+            bfb = true;
+        }
+        else{
+            bfb = false;
+        }
+            
     }
     public void loadBFB(){
         bfb = false;

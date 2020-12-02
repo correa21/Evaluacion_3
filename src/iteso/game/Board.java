@@ -82,18 +82,20 @@ public class Board  extends JPanel implements Runnable
             // Six rows
             for (int row = 0; row < 6; row++) {
                 // 5 columns
-                for (int column = 0; column < 5; column++) {
-                    robots = new Robot((20 + (row * 100)), (20 + (column * 60)), level, 0, column, null, 40, 40); // Enemy speed will increase each level
-                    enemyList.add(enemy);
+                for (int column = 0; column < 4; column++) {
+                    if(r.nextInt(2)%1 == 0){
+                        robots = new Dron(BOARD_WIDTH-Dron.WIDTH, BOARD_HEIGHT-Dron.HEIGTH, true, level);
+                        enemyList.add(robots);
+                    }
+                    else{
+                        robots = new Dron(BOARD_WIDTH-Dron.WIDTH, BOARD_HEIGHT-Dron.HEIGTH, true, level);
+                        enemyList.add(robots);
+                    }
+                    
                 }
             }
         }
-        // Sets enemy for boss levels
-        if (level == 3 || level == 6 || level == 9 || level == 12) {
-            AudioPlayer.player.start(bossSoundAudio); // Plays boss roar
-            enemy = new Enemy(20, 20, 3, 0, 100, null, 150, 150);
-            enemyList.add(enemy);
-        }
+    
         // Gives directions on level 1
         if (level == 1) {
             JOptionPane.showMessageDialog(null, "Welcome to Space Intruders!\n\nTHINGS TO KNOW:\n\n- Use left/right arrow keys to move\n- Press spacebar to shoot\n- The enemies get faster every level"
@@ -102,23 +104,6 @@ public class Board  extends JPanel implements Runnable
         // Resets all controller movement
         controller.resetController();
 
-        // Sets the player's ship values   
-        playerShip = new Ship(375, 730, null, controller);
-
-        // Sets the life counter Ships
-        for (int column = 0; column < numberOfLives; column++) {
-            singleLife = new Ship(48 + (column * 20), 10, Color.WHITE, null);
-            lifeList.add(singleLife);
-        }
-
-        // Sets the values for 3 rows and 3 columns of shields
-        for (int row = 0;
-                row < 3; row++) {
-            for (int column = 0; column < 3; column++) {
-                shield = new Shield(100 + (column * 250), 650 - (row * 10), 70, 10, Color.RED);
-                shieldList.add(shield);
-            }
-        }
         player = new Player("ARmando", "Gradak", 0, 120, null, controller);
     }
 
@@ -133,14 +118,16 @@ public class Board  extends JPanel implements Runnable
         this.controller = new KeyHandler();
         addKeyListener(controller);
 
+        setupBoard();
+        this.setFocusable(true);
+        this.setDoubleBuffered(true);
+        this.requestFocusInWindow();
+
         if (animator == null || !ingame) {
         animator = new Thread(this);
         animator.start();
         }
 
-        this.setFocusable(true);
-        this.setDoubleBuffered(true);
-        this.requestFocusInWindow();
     }
 
     @Override
@@ -185,10 +172,10 @@ public class Board  extends JPanel implements Runnable
                     canFireNewBullet = true;
                 }
                 //check if bullet out of screen limit
-                if (bullet.getXPosition() > WIDTH){
+                if (bullets.get(index).getXPosition() > BOARD_WIDTH){
                     bullets.remove(index);
                 }
-
+                System.out.println(bullets.size());
             }
         }
         else{

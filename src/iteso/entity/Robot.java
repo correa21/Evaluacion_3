@@ -9,9 +9,6 @@ public class Robot extends Character {
 
     private boolean moveForward;
 
-    public Robot() {
-
-    }
 
     public Robot(int xPosition, int yPosition, int xVelocity, int yVelocity, boolean visible, int width, int heigth) {
         super(xPosition, yPosition, xVelocity, yVelocity, null, visible, width, heigth);
@@ -19,18 +16,19 @@ public class Robot extends Character {
         isVisible = false;
     }
 
-
     @Override
     public void draw(Graphics g) {
-        // TODO Auto-generated method stub
+        //do nothing
 
     }
 
     @Override
     public Rectangle getBounds() {
-        // TODO Auto-generated method stub
+        //do nothing
         return null;
     }
+
+
 
 
 }
