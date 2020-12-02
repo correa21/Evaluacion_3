@@ -256,7 +256,7 @@ public class Board  extends JPanel implements Runnable
         long beforeTime, timeDiff, sleep;
 
         beforeTime = System.currentTimeMillis();
-        int animationDelay = 15;
+        int animationDelay = 20;
         long time = System.currentTimeMillis();
             while (true) {//infinite loop
                 updateGameState();
