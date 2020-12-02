@@ -10,7 +10,7 @@ public class Human extends ControlledCharacter {
     private boolean moveLeft, moveRight, moveUp, moveDown; 
     private boolean shoot;
     private boolean pause;
-    protected int bfbMetter = 1000;
+    public int bfbMetter = 0;
     protected static final int BFBREADY = 1000;
     protected  int width = 150;
     protected int height = 120;

@@ -11,7 +11,7 @@ public class Dron extends Robot {
 
     public static final int WIDTH = 77;
     public static final int HEIGTH = 105;
-    private static final int SPEED = 2;
+    private static final int SPEED = 1;
 
     ImageIcon dronIconL = new ImageIcon("images/dron2.gif");
     ImageIcon dronIconR = new ImageIcon("images/dron.gif");
