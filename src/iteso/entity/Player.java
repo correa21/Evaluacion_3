@@ -84,15 +84,16 @@ public class Player extends Human {
             stopMoving();
         }
         //Up arrow key press 
-        // if (control.getKeyStatus(control.JUMP)){
-        //     while (this.yPos < (this.height*2)){
-        //         this.yPos -= JUMPHEIGHT;
-        //     }
-        // }else{
-        //     while(this.yPos > height){
-        //         this.yPos += JUMPHEIGHT;
-        //     }
-        // }
+        if (control.getKeyStatus(control.JUMP)){
+            this.yPos -= JUMPHEIGHT*SPEED;
+        }
+        else {
+            if (this.yPos >= (220-100)) {
+                stopMoving();
+            }
+            else
+                this.yPos += JUMPHEIGHT*SPEED;
+        }
         if (control.getKeyStatus(control.SHOOT)){
             startShooting();
         }
