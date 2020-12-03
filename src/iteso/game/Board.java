@@ -285,6 +285,7 @@ public class Board extends JPanel implements Runnable {
                         break;
                     }
                 }
+
                 for (int enemyIndex = 0; enemyIndex < brList.size(); enemyIndex++) {
                     if ((bullets.isEmpty() != true) && (bullets.get(index).isColliding(brList.get(enemyIndex)))) {
                         bullets.remove(index);
@@ -346,6 +347,19 @@ public class Board extends JPanel implements Runnable {
                     lifeList.remove(lifeList.size() - 1); // Removes life if hit by bullet
                 }
             }
+
+            for (int index = 0; index < dronList.size(); index++) {
+                if (dronList.get(index).isColliding(player)) {
+                    lifeList.remove(lifeList.size() - 1); // Removes life if hit by bullet
+                }
+            }
+
+            for (int index = 0; index < brList.size(); index++) {
+                if (brList.get(index).isColliding(player)) {
+                    lifeList.remove(lifeList.size() - 1); // Removes life if hit by bullet
+                }
+            }
+
             // Updates the life counter display
             if ((player.isColliding) && !lifeList.isEmpty()) {
                 int index = lifeList.size() - 1;
@@ -361,7 +375,6 @@ public class Board extends JPanel implements Runnable {
                     pause = false;
                     lifeList.clear();
                     dronList.clear();
-                    pause = false;
                     robotBullets.clear();
                     bullets.clear();
                     level = 1;
@@ -385,9 +398,9 @@ public class Board extends JPanel implements Runnable {
                 setupBoard();
             }
             if (controller.getKeyStatus(controller.ESCAPE) == true) {
+                pause = true;
+                ingame = false;
                 if (System.currentTimeMillis() > debounce) {
-                    pause = true;
-                    ingame = false;
                     debounce = System.currentTimeMillis()+2000;
                 }
                 
@@ -408,25 +421,24 @@ public class Board extends JPanel implements Runnable {
                     controller.setKeyStatus(controller.ESCAPE,false);
                     pause = false;
                     //JOptionPane.getRootFrame().dispose();
-                    debounce = System.currentTimeMillis()+2000;
-
-                break;
+                    //debounce = System.currentTimeMillis()+2000;
+                    break;
                 
                 case 1:
+                    pause = false;
                     lifeList.clear();
                     dronList.clear();
-                    brList.clear();
                     robotBullets.clear();
+                    bullets.clear();
                     level = 1;
                     numberOfLives = 3;
                     canFireNewBullet = true;
                     newRobotCanFire = true;
                     setupBoard();
-                    pause = false;
-                break;
+                    break;
                 case 2: 
                     System.exit(0);
-                break;
+                    break;
                 default:
                 break;
             }
