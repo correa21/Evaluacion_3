@@ -400,7 +400,9 @@ public class Board extends JPanel implements Runnable {
                     lifeList.clear();
                     dronList.clear();
                     brList.clear();
-                    robotBullets.clear();
+                    for (int index = 0; index < robotBullets.size(); index++){
+                        robotBullets.get(index).setVisibile(false);
+                    }
                     bullets.clear();
                     level = 1;
                     numberOfLives = 3;
@@ -416,9 +418,11 @@ public class Board extends JPanel implements Runnable {
 
             // Goes to next level, resets all lists, sets all counters to correct values
             if (dronList.isEmpty() && brList.isEmpty()) {
-                robotBullets.clear();
-                lifeList.clear();
                 bullets.clear();
+                lifeList.clear();
+                for (int index = 0; index < robotBullets.size(); index++){
+                    robotBullets.get(index).setVisibile(false);
+                }
                 level += 1;
                 setupBoard();
             }
