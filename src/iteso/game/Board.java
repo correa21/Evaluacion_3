@@ -82,6 +82,9 @@ public class Board extends JPanel implements Runnable {
     private int newx = 0;
     private BufferedImage img;
     private Thread animator;
+
+    private int timeout = 0;
+    private boolean flagTimeout = false;
        
     private KeyHandler controller;
 
@@ -340,30 +343,45 @@ public class Board extends JPanel implements Runnable {
                     robotBullets.remove(index);
                 }
             }
-            // Checks for beam and player collisions
-            for (int index = 0; index < robotBullets.size(); index++) {
-                if (robotBullets.get(index).isColliding(player)) {
-                    robotBullets.remove(index);
-                    lifeList.remove(lifeList.size() - 1); // Removes life if hit by bullet
+
+            if(timeout == 0) {
+                // Checks for beam and player collisions
+                for (int index = 0; index < robotBullets.size(); index++) {
+                    if (robotBullets.get(index).isColliding(player)) {
+                        robotBullets.remove(index);
+                        lifeList.remove(lifeList.size() - 1); // Removes life if hit by bullet
+                        flagTimeout = true;
+                    }
+                }
+
+                for (int index = 0; index < dronList.size(); index++) {
+                    if (dronList.get(index).isColliding(player)) {
+                        lifeList.remove(lifeList.size() - 1); // Removes life if hit by bullet
+                        flagTimeout = true;
+                    }
+                }
+
+                for (int index = 0; index < brList.size(); index++) {
+                    if (brList.get(index).isColliding(player)) {
+                        lifeList.remove(lifeList.size() - 1); // Removes life if hit by bullet
+                        flagTimeout = true;
+                    }
+                }
+
+                // Updates the life counter display
+                if ((player.isColliding) && !lifeList.isEmpty()) {
+                    int index = lifeList.size() - 1;
+                    lifeList.remove(index);
+                    flagTimeout = true;
                 }
             }
 
-            for (int index = 0; index < dronList.size(); index++) {
-                if (dronList.get(index).isColliding(player)) {
-                    lifeList.remove(lifeList.size() - 1); // Removes life if hit by bullet
+            if(flagTimeout){
+                timeout++;
+                if(timeout == 150){
+                    timeout = 0;
+                    flagTimeout = false;
                 }
-            }
-
-            for (int index = 0; index < brList.size(); index++) {
-                if (brList.get(index).isColliding(player)) {
-                    lifeList.remove(lifeList.size() - 1); // Removes life if hit by bullet
-                }
-            }
-
-            // Updates the life counter display
-            if ((player.isColliding) && !lifeList.isEmpty()) {
-                int index = lifeList.size() - 1;
-                lifeList.remove(index);
             }
             // Ends game if player runs out of lives
             else if (lifeList.isEmpty()) {
