@@ -18,7 +18,7 @@ public class ControlledCharacter extends GameObject implements Moveable {
 
     // Constructor for any controllable object
     public ControlledCharacter(int xPosition, int yPosition, Color color, KeyHandler control, boolean visible){
-        super(xPosition, yPosition, color, visible);
+        super(xPosition, yPosition, color);
         this.control = control;
     }
 
