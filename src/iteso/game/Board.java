@@ -352,30 +352,37 @@ public class Board extends JPanel implements Runnable {
                         robotBullets.remove(index);
                         lifeList.remove(lifeList.size() - 1); // Removes life if hit by bullet
                         flagTimeout = true;
+                        break;
                     }
                 }
-
+            }
+            if(!flagTimeout) {
                 for (int index = 0; index < dronList.size(); index++) {
                     if (dronList.get(index).isColliding(player)) {
                         lifeList.remove(lifeList.size() - 1); // Removes life if hit by bullet
                         flagTimeout = true;
+                        break;
                     }
                 }
-
+            }
+            if(!flagTimeout) {
                 for (int index = 0; index < brList.size(); index++) {
                     if (brList.get(index).isColliding(player)) {
                         lifeList.remove(lifeList.size() - 1); // Removes life if hit by bullet
                         flagTimeout = true;
+                        break;
                     }
                 }
-
+            }
+            if(!flagTimeout) {
                 // Updates the life counter display
                 if ((player.isColliding) && !lifeList.isEmpty()) {
                     int index = lifeList.size() - 1;
                     lifeList.remove(index);
                 }
             }
-            else {
+
+            if(flagTimeout) {
                 timeout++;
                 if(timeout == 150){
                     timeout = 0;
