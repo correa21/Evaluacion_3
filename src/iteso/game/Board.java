@@ -182,6 +182,7 @@ public class Board extends JPanel implements Runnable {
         g.setColor(Color.pink);
         g.setFont(small);
         g.drawString("SCORE: " + player.scoreToString(), 10, d.height - 260);
+        g.drawString("LEVEL " + level, 300, d.height - 260);
 
         for (int index = 0; index < lifeList.size(); index++) {
             lifeList.get(index).drawLife(g);
@@ -315,7 +316,7 @@ public class Board extends JPanel implements Runnable {
                     bullets.remove(0);
                     canFireNewBullet = true;
                 }
-                System.out.println("estoy jugando");
+                //System.out.println("estoy jugando");
             }
             // move dron
             for (int index = 0; index < dronList.size(); index++) {
@@ -344,7 +345,7 @@ public class Board extends JPanel implements Runnable {
                 }
             }
 
-            if(timeout == 0) {
+            if(!flagTimeout) {
                 // Checks for beam and player collisions
                 for (int index = 0; index < robotBullets.size(); index++) {
                     if (robotBullets.get(index).isColliding(player)) {
@@ -375,16 +376,16 @@ public class Board extends JPanel implements Runnable {
                     flagTimeout = true;
                 }
             }
-
-            if(flagTimeout){
+            else {
                 timeout++;
                 if(timeout == 150){
                     timeout = 0;
                     flagTimeout = false;
                 }
             }
+
             // Ends game if player runs out of lives
-            else if (lifeList.isEmpty()) {
+            if (lifeList.isEmpty()) {
                 // Gives the player an option to play again or exit
                 int answer = JOptionPane.showConfirmDialog(null, "Would you like to play again?",
                         "You lost the game with " + player.getBestScore() + " points", 0);
@@ -428,7 +429,7 @@ public class Board extends JPanel implements Runnable {
         }
         else{
 
-            System.out.println("estoy en pausa");
+            //System.out.println("estoy en pausa");
             String[] buttons = {"Resume","Restart","Exit"};
             int obtionSelect = JOptionPane.showOptionDialog(null,"PAUSE","", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
         // If they choose to play again, this resets every element in the game
