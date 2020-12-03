@@ -16,58 +16,58 @@ public class Statistics {
 
     private Object [][] scoreTable = new Object[TOPSCORE][TABLE_ELEMENTS];
 
-   private Statistics(){
-       for (int i = 0; i < TOPSCORE; i++){
-           for (int j = 0; j < TABLE_ELEMENTS; j++){
-               if(Elements.PLAYER.ordinal() == j){
-                   scoreTable[i][j] = new Player();
-               }
-               if(Elements.DATE.ordinal() == j){
-                   scoreTable[i][j] = new Millis(0L);
-               }
-               if(Elements.SCORE.ordinal() == j){
-                   scoreTable[i][j] = 0L;
-               }
-           }
+    private Statistics(){
+        for (int i = 0; i < TOPSCORE; i++){
+            for (int j = 0; j < TABLE_ELEMENTS; j++){
+                if(Elements.PLAYER.ordinal() == j){
+                    scoreTable[i][j] = new Player();
+                }
+                if(Elements.DATE.ordinal() == j){
+                    scoreTable[i][j] = new Millis(0L);
+                }
+                if(Elements.SCORE.ordinal() == j){
+                    scoreTable[i][j] = 0L;
+                }
+            }
 
-       }
-   }
+        }
+    }
 
-   public static Statistics getInstance(){
-       if(instance == null) instance = new Statistics();
-       return instance;
-   }
+    public static Statistics getInstance(){
+        if(instance == null) instance = new Statistics();
+        return instance;
+    }
 
-   public long getBestScore(){
-       return (long) scoreTable[0][Elements.SCORE.ordinal()];
-   }
+    public long getBestScore(){
+        return (long) scoreTable[0][Elements.SCORE.ordinal()];
+    }
 
-   public String getBestPlayerNickName(){
-       Player p = (Player) scoreTable[0][Elements.PLAYER.ordinal()];
-       return p.getNickName();
-   }
+    public String getBestPlayerNickName(){
+        Player p = (Player) scoreTable[0][Elements.PLAYER.ordinal()];
+        return p.getNickName();
+    }
 
-   public void setBestScoreDate(Millis date){
-       scoreTable[0][Elements.DATE.ordinal()] = date;
-   }
+    public void setBestScoreDate(Millis date){
+        scoreTable[0][Elements.DATE.ordinal()] = date;
+    }
 
-   public Millis getBestScoreDate(){
-       return (Millis) scoreTable[0][Elements.DATE.ordinal()];
-   }
+    public Millis getBestScoreDate(){
+        return (Millis) scoreTable[0][Elements.DATE.ordinal()];
+    }
 
-   public Object [][] getHonourTable(){
-       return scoreTable;
-   }
-   private long getScoreAt(int n){
-       return (long) scoreTable[n][Elements.SCORE.ordinal()];
-   }
-   private String getPlayerNickAt(int n){
-       Player p = (Player) scoreTable[n][Elements.PLAYER.ordinal()];
-       return p.getNickName();
-   }
-   private Millis getScoreDateAt(int n){
-       return (Millis) scoreTable[n][Elements.DATE.ordinal()];
-   }
+    public Object [][] getHonourTable(){
+        return scoreTable;
+    }
+    private long getScoreAt(int n){
+        return (long) scoreTable[n][Elements.SCORE.ordinal()];
+    }
+    private String getPlayerNickAt(int n){
+        Player p = (Player) scoreTable[n][Elements.PLAYER.ordinal()];
+        return p.getNickName();
+    }
+    private Millis getScoreDateAt(int n){
+        return (Millis) scoreTable[n][Elements.DATE.ordinal()];
+    }
     public void setHonourTableMember(Player player, Millis date, long score){
 
 
@@ -91,10 +91,10 @@ public class Statistics {
 
     public String toString(){
         if (scoreTable[0][0] == null){return "";}
-        return ("\t\tTOP SCORES\n SCORE\t\t\tDATE\t\t\tNICKNAME\n" +
-                getBestScore() + "\t" + getBestScoreDate() + "\t" + getBestPlayerNickName() + "\n" +
-                getScoreAt(1) + "\t" + getScoreDateAt(1) + "\t" + getPlayerNickAt(1) + "\n" +
-                getScoreAt(2) + "\t" + getScoreDateAt(2) + "\t" + getPlayerNickAt(2) + "\n");
+        return ("\t\tTOP SCORES\n SCORE\t\t\tDATE\t\t\t\tNICKNAME\n" +
+                getBestScore() + "\t" + getBestScoreDate() + "\t\t" + getBestPlayerNickName() + "\n" +
+                getScoreAt(1) + "\t" + getScoreDateAt(1) + "\t\t" + getPlayerNickAt(1) + "\n" +
+                getScoreAt(2) + "\t" + getScoreDateAt(2) + "\t\t" + getPlayerNickAt(2) + "\n");
     }
 
     private void bubbleSort(){

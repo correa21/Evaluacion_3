@@ -18,7 +18,7 @@ public class Dron extends Robot {
     ImageIcon invisible = new ImageIcon("images/invisible.png");
 
     public Dron (int xPosition, int yPosition, boolean visible, int level){
-        super(xPosition, yPosition, -SPEED, 0, visible, WIDTH, HEIGTH);
+        super(xPosition, yPosition, -SPEED * level, 0, visible, WIDTH, HEIGTH);
 
     }
     @Override

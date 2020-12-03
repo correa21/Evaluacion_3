@@ -32,6 +32,7 @@ public class KeyHandler implements KeyListener{
             return keyStatus[keyCode]; 
         }
     }
+
     public void setKeyStatus(int keyCode ,boolean status){
         keyStatus[keyCode] = status;
     }
