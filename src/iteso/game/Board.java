@@ -21,6 +21,8 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -29,11 +31,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import iteso.calendar.Millis;
 import iteso.entity.BigRobot;
 import iteso.entity.Bullet;
 import iteso.entity.Dron;
 import iteso.entity.Human;
 import iteso.entity.Player;
+import iteso.statistics.Statistics;
 import iteso.utils.KeyHandler;
 import javax.swing.*;
 
@@ -74,6 +78,9 @@ public class Board extends JPanel implements Runnable {
     private Player player;
     private Bullet robotBullet;
     private Bullet dronBullet;
+    private Statistics stats;
+
+
 
     // added booleans
     private boolean canFireNewBullet = true;
@@ -104,9 +111,6 @@ public class Board extends JPanel implements Runnable {
         roboto = new BigRobot(0, 0, false, 0);
         // Gives directions on level 1
         if (level == 1) {
-            JOptionPane.showMessageDialog(null,
-                    "Welcome to Space Intruders!\n\nTHINGS TO KNOW:\n\n- Use left/right arrow keys to move\n- Press spacebar to shoot\n- The enemies get faster every level"
-                            + "\n- BOSS every 3 levels\n- A bonus enemy will appear randomly\n- Shoot it for extra points!\n- Press R to reset high score\n- All pixel art is original\n- PLAY WITH SOUND\n\nHAVE FUN!");
             Object[] field = {
                 "Nombre", playerName,
                 "Nickname", playerNickName
@@ -120,6 +124,8 @@ public class Board extends JPanel implements Runnable {
             else {
                 System.exit(0);
             }
+            JOptionPane.showMessageDialog(null,"¡Bienvenido!\n\nCosas a saber:\n\n- Usa A/D para moverte izquierda/derecha\n- Espacio para disparar\n- Presiona W para saltar\n- Los enemigos van cada vez más rapidos"
+                            + "\n- Presiona ESC para pausar el juego\n\n¡DIVIERTETE!");
         }
         // Resets all controller movement
         controller.resetController();
@@ -147,7 +153,8 @@ public class Board extends JPanel implements Runnable {
         this.setFocusable(true);
         this.setDoubleBuffered(true);
         this.requestFocusInWindow();
-
+        
+        stats = Statistics.getInstance();
         if (animator == null || !ingame) {
             animator = new Thread(this);
             animator.start();
@@ -436,6 +443,16 @@ public class Board extends JPanel implements Runnable {
 
             // Ends game if player runs out of lives
             if (lifeList.isEmpty()) {
+                Millis date = new Millis();
+                stats.setHonourTableMember(player, date, player.getBestScore());
+                try {
+                    
+                    FileWriter scoreFile = new FileWriter("topScore.txt");
+                    scoreFile.write(stats.toString());
+                    scoreFile.close();
+                } catch (IOException e) {
+                    //do Nothing
+                }
                 // Gives the player an option to play again or exit
                 int answer = JOptionPane.showConfirmDialog(null, "Would you like to play again?",
                         "You lost the game with " + player.getBestScore() + " points", 0);
