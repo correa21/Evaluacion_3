@@ -373,7 +373,6 @@ public class Board extends JPanel implements Runnable {
                 if ((player.isColliding) && !lifeList.isEmpty()) {
                     int index = lifeList.size() - 1;
                     lifeList.remove(index);
-                    flagTimeout = true;
                 }
             }
             else {
@@ -391,9 +390,9 @@ public class Board extends JPanel implements Runnable {
                         "You lost the game with " + player.getBestScore() + " points", 0);
                 // If they choose to play again, this resets every element in the game
                 if (answer == 0) {
-                    pause = false;
                     lifeList.clear();
                     dronList.clear();
+                    brList.clear();
                     robotBullets.clear();
                     bullets.clear();
                     level = 1;
@@ -447,6 +446,7 @@ public class Board extends JPanel implements Runnable {
                     pause = false;
                     lifeList.clear();
                     dronList.clear();
+                    brList.clear();
                     robotBullets.clear();
                     bullets.clear();
                     level = 1;
